@@ -52,7 +52,7 @@ const getUser = async (req, res) => {
   try {
     const result = await userServices.getUser();
 
-    if (result) {
+    if (result.length > 0) {
       res.status(200).json({
         success: true,
         data: result,
@@ -79,7 +79,7 @@ const getUserById = async (req, res) => {
     const { id } = req.params;
     const result = await userServices.getUserById(id);
 
-    if (result) {
+    if (result.length > 0) {
       res.status(200).json({
         success: true,
         data: result,

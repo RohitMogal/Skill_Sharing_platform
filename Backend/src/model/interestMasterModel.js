@@ -4,7 +4,7 @@ const sequelize = require("../config/sequelize");
 const InterestMaster = sequelize.define(
   "InterestMaster",
   {
-    InterestMasterId: {
+    Id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
