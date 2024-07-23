@@ -135,7 +135,7 @@ const deleteFeedback = async(req, res) => {
 };
 
 module.exports = {
-    createFeedback,
+    creatFeedback,
     getFeedback,
     getFeedbackBySession,
     updateFeedback,

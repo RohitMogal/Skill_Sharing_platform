@@ -45,7 +45,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/users", userRoutes);
 app.use("/session", sessionRoutes);
-app.use("/session", feedbackRoutes);
+app.use("/feedback", feedbackRoutes);
 app.use("/auth", authRoutes);
 app.use("/interestMaster", interestMasterRoute);
 
