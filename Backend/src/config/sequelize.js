@@ -7,12 +7,12 @@ const sequelize = new Sequelize("Skill_Scheduling", "root", "Pass@123", {
 });
 
 async function testConnection() {
-  try {
-    await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-  }
+    try {
+        await sequelize.authenticate();
+        console.log("Connection has been established successfully.");
+    } catch (error) {
+        console.error("Unable to connect to the database:", error);
+    }
 }
 
 testConnection();

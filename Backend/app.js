@@ -3,6 +3,8 @@ const app = express();
 const sequelize = require("./src/config/sequelize");
 
 const userRoutes = require("./src/routes/userRoutes");
+const sessionRoutes = require("./src/routes/sessionRoute");
+const feedbackRoutes = require("./src/routes/feedbackRoutes");
 const authRoutes = require("./src/routes/authRoutes");
 const interestMasterRoute = require("./src/routes/interestMasterRoute");
 const userInterestRoute = require("./src/routes/userInterestRoute");
@@ -38,11 +40,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/users", userRoutes);
+app.use("/session", sessionRoutes);
+app.use("/feedback", feedbackRoutes);
 app.use("/auth", authRoutes);
 app.use("/interestMaster", interestMasterRoute);
 app.use("/userInterest", userInterestRoute);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+    console.log(`Server running on port ${port}`);
 });

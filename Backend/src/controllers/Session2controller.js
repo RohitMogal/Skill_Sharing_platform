@@ -1,50 +1,22 @@
-const userServices = require("../services/userService");
-const Joi = require("joi");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const SessionServices = require("../services/SessionServices");
 
-// Validation schemas
-const userValidation = Joi.object({
-  fullName: Joi.string().min(1).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-  profilePicture: Joi.string(),
-  about: Joi.string().required(),
-});
-
-const createUser = async(req, res) => {
+const createsession = async(req, res) => {
     try {
-        const { error } = userValidation.validate(req.body);
-        if (error) {
-            return res.status(400).json({
-                success: false,
-                data: null,
-                message: error.details[0].message,
-            });
-        }
+        const { UserId, Description, Title, Link, SessionImg, InterestId, SessionTime } = req.body;
 
-    const { fullName, email, password, profilePicture, about } = req.body;
-    const hashPassword = await bcrypt.hash(password, saltRounds);
-
-    const result = await userServices.createUser(
-      fullName,
-      email,
-      hashPassword,
-      profilePicture,
-      about,
-    );
+        const result = await SessionServices.createsession(UserId, Description, Title, Link, SessionImg, InterestId, SessionTime);
 
         if (result) {
             res.status(200).json({
                 success: true,
                 data: result,
-                message: "User created successfully",
+                message: "Session created successfully",
             });
         } else {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "User creation failed",
+                message: "Session creation failed",
             });
         }
     } catch (error) {
@@ -56,9 +28,9 @@ const createUser = async(req, res) => {
     }
 };
 
-const getUser = async(req, res) => {
+const getSession = async(req, res) => {
     try {
-        const result = await userServices.getUser();
+        const result = await SessionServices.getSession();
 
         if (result.length > 0) {
             res.status(200).json({
@@ -82,10 +54,10 @@ const getUser = async(req, res) => {
     }
 };
 
-const getUserById = async(req, res) => {
+const getSessionById = async(req, res) => {
     try {
         const { id } = req.params;
-        const result = await userServices.getUserById(id);
+        const result = await SessionServices.getSessionById(id);
 
         if (result.length > 0) {
             res.status(200).json({
@@ -97,7 +69,7 @@ const getUserById = async(req, res) => {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "User not found",
+                message: "Session not found",
             });
         }
     } catch (error) {
@@ -109,31 +81,22 @@ const getUserById = async(req, res) => {
     }
 };
 
-const updateUser = async(req, res) => {
+const updateSession = async(req, res) => {
     try {
-        const { error } = userValidation.validate(req.body);
-        if (error) {
-            return res.status(400).json({
-                success: false,
-                data: null,
-                message: bodyError.details[0].message,
-            });
-        }
-
         const { id } = req.params;
-        const result = await userServices.updateUser(id, req.body);
+        const result = await SessionServices.updateSession(id, req.body);
 
         if (result) {
             res.status(200).json({
                 success: true,
                 data: result,
-                message: "User updated successfully",
+                message: "Session updated successfully",
             });
         } else {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "User update failed",
+                message: "Session update failed",
             });
         }
     } catch (error) {
@@ -145,22 +108,22 @@ const updateUser = async(req, res) => {
     }
 };
 
-const deleteUser = async(req, res) => {
+const deleteSession = async(req, res) => {
     try {
         const { id } = req.params;
-        const result = await userServices.deleteUser(id);
+        const result = await SessionServices.deleteSession(id);
 
         if (result) {
             res.status(200).json({
                 success: true,
                 data: null,
-                message: "User deleted successfully",
+                message: "Session deleted successfully",
             });
         } else {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "User deletion failed",
+                message: "Session deletion failed",
             });
         }
     } catch (error) {
@@ -172,4 +135,4 @@ const deleteUser = async(req, res) => {
     }
 };
 
-module.exports = { createUser, getUser, getUserById, updateUser, deleteUser };
+module.exports = { createsession, getSession, getSessionById, updateSession, deleteSession };

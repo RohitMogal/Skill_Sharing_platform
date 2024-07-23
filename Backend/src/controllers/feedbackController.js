@@ -1,50 +1,21 @@
-const userServices = require("../services/userService");
-const Joi = require("joi");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const FeedbackServices = require('../services/feedbackServices');
 
-// Validation schemas
-const userValidation = Joi.object({
-  fullName: Joi.string().min(1).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-  profilePicture: Joi.string(),
-  about: Joi.string().required(),
-});
-
-const createUser = async(req, res) => {
+const creatFeedback = async(req, res) => {
     try {
-        const { error } = userValidation.validate(req.body);
-        if (error) {
-            return res.status(400).json({
-                success: false,
-                data: null,
-                message: error.details[0].message,
-            });
-        }
+        const { UserId, SessionId, FeedbackComment } = req.body;
 
-    const { fullName, email, password, profilePicture, about } = req.body;
-    const hashPassword = await bcrypt.hash(password, saltRounds);
-
-    const result = await userServices.createUser(
-      fullName,
-      email,
-      hashPassword,
-      profilePicture,
-      about,
-    );
-
+        const feedbackId = await FeedbackServices.createFeedback(UserId, SessionId, FeedbackComment);
         if (result) {
             res.status(200).json({
                 success: true,
                 data: result,
-                message: "User created successfully",
+                message: "Feedback created successfully",
             });
         } else {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "User creation failed",
+                message: "Feedback creation failed",
             });
         }
     } catch (error) {
@@ -56,9 +27,9 @@ const createUser = async(req, res) => {
     }
 };
 
-const getUser = async(req, res) => {
+const getFeedback = async(req, res) => {
     try {
-        const result = await userServices.getUser();
+        const result = await feedbackServices.getFeedback();
 
         if (result.length > 0) {
             res.status(200).json({
@@ -82,10 +53,10 @@ const getUser = async(req, res) => {
     }
 };
 
-const getUserById = async(req, res) => {
+const getFeedbackBySession = async(req, res) => {
     try {
-        const { id } = req.params;
-        const result = await userServices.getUserById(id);
+        const { sessionId } = req.params;
+        const feedback = await FeedbackServices.getFeedbackBySession(sessionId);
 
         if (result.length > 0) {
             res.status(200).json({
@@ -97,7 +68,7 @@ const getUserById = async(req, res) => {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "User not found",
+                message: "List retrieval failed",
             });
         }
     } catch (error) {
@@ -109,31 +80,22 @@ const getUserById = async(req, res) => {
     }
 };
 
-const updateUser = async(req, res) => {
+const updateFeedback = async(req, res) => {
     try {
-        const { error } = userValidation.validate(req.body);
-        if (error) {
-            return res.status(400).json({
-                success: false,
-                data: null,
-                message: bodyError.details[0].message,
-            });
-        }
-
         const { id } = req.params;
-        const result = await userServices.updateUser(id, req.body);
+        const result = await FeedbackServices.updateFeedback(id, req.body);
 
         if (result) {
             res.status(200).json({
                 success: true,
                 data: result,
-                message: "User updated successfully",
+                message: "Feedback updated successfully",
             });
         } else {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "User update failed",
+                message: "Feedback update failed",
             });
         }
     } catch (error) {
@@ -145,22 +107,22 @@ const updateUser = async(req, res) => {
     }
 };
 
-const deleteUser = async(req, res) => {
+const deleteFeedback = async(req, res) => {
     try {
         const { id } = req.params;
-        const result = await userServices.deleteUser(id);
+        const result = await SessionServices.deleteFeedback(id);
 
         if (result) {
             res.status(200).json({
                 success: true,
                 data: null,
-                message: "User deleted successfully",
+                message: "Feedback deleted successfully",
             });
         } else {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "User deletion failed",
+                message: "Feedback deletion failed",
             });
         }
     } catch (error) {
@@ -172,4 +134,10 @@ const deleteUser = async(req, res) => {
     }
 };
 
-module.exports = { createUser, getUser, getUserById, updateUser, deleteUser };
+module.exports = {
+    creatFeedback,
+    getFeedback,
+    getFeedbackBySession,
+    updateFeedback,
+    deleteFeedback,
+};
