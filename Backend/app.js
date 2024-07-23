@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const userRoutes = require("./src/routes/userRoutes");
+const sessionRoutes = require("./src/routes/sessionRoute");
+const feedbackRoutes = require("./src/routes/feedbackRoutes");
 const authRoutes = require("./src/routes/authRoutes");
 const interestMasterRoute = require("./src/routes/interestMasterRoute");
 const sequelize = require("./src/config/sequelize");
@@ -36,12 +38,14 @@ function createTables() {
             process.exit(1);
         });
 }
-// createTables();
+createTables();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/users", userRoutes);
+app.use("/session", sessionRoutes);
+app.use("/session", feedbackRoutes);
 app.use("/auth", authRoutes);
 app.use("/interestMaster", interestMasterRoute);
 
