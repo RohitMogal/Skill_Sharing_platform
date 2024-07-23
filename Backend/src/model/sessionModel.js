@@ -29,12 +29,22 @@ const Session = sequelize.define(
     Link: {
       type: DataTypes.STRING(255),
     },
+    SessionImg: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
     InterestId: {
       type: DataTypes.CHAR(36),
       references: {
         model: UserInterest,
         key: "InterestId",
       },
+    },
+    SessionRating: {
+      type: DataTypes.DECIMAL(3, 2),
+    },
+    NumberOfRatings: {
+      type: DataTypes.INTEGER,
     },
     SessionTime: {
       type: DataTypes.DATE,
@@ -50,7 +60,7 @@ const Session = sequelize.define(
   },
   {
     timestamps: false,
-    tableName: "Session",
+    tableName: "Sessions",
   },
 );
 

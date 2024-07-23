@@ -22,6 +22,20 @@ const User = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
+    About: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    ProfilePic: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    Rating: {
+      type: DataTypes.INTEGER,
+    },
+    NumberOfRatings: {
+      type: DataTypes.INTEGER,
+    },
     IsDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,

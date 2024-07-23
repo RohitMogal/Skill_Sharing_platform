@@ -3,7 +3,7 @@ const { Sequelize } = require("sequelize");
 const sequelize = new Sequelize("Skill_Scheduling", "root", "Pass@123", {
   host: "127.0.0.1",
   dialect: "mysql",
-  logging: false, // Enable logging of SQL queries
+  logging: false,
 });
 
 async function testConnection() {
