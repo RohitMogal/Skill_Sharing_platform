@@ -1,26 +1,51 @@
 const express = require("express");
-const fileUpload = require("express-fileupload");
-const cors = require("cors");
 const app = express();
-const userRoutes = require("./src/routes/userRoute");
-const sessionRoutes = require("./src/routes/sessionRoute");
+const userRoutes = require("./src/routes/userRoutes");
+const authRoutes = require("./src/routes/authRoutes");
+const interestMasterRoute = require("./src/routes/interestMasterRoute");
+const sequelize = require("./src/config/sequelize");
+const User = require("./src/model/userModel");
+const InterestMaster = require("./src/model/interestMasterModel");
+const UserInterest = require("./src/model/userInterestModel");
+const Session = require("./src/model/sessionModel");
+const Feedback = require("./src/model/feedbackModel");
 
-// Middleware to parse JSON bodies
+const models = {
+    User,
+    InterestMaster,
+    UserInterest,
+    Session,
+    Feedback,
+};
+
+function createTables() {
+    Object.keys(models).forEach((modelName) => {
+        if ("associate" in models[modelName]) {
+            models[modelName].associate(models);
+        }
+    });
+
+    // Sync models with the database
+    sequelize
+        .sync({ alter: true })
+        .then(() => {
+            console.log("Database & tables created!");
+        })
+        .catch((err) => {
+            console.error("Unable to create tables, shutting down...", err);
+            process.exit(1);
+        });
+}
+// createTables();
+
 app.use(express.json());
-
-// Use the session routes
-app.use('/api', sessionRoutes);
-
-
-
-// Enable file upload
-app.use(fileUpload());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(cors());
 
+app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
+app.use("/interestMaster", interestMasterRoute);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });
