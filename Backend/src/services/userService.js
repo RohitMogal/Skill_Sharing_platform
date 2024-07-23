@@ -1,14 +1,14 @@
 const executeQuery = require("../config/db_config");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const createUser = async (fullName, email, password, profilePic, about) => {
+const createUser = async (fullName, email, password, profilePicture, about) => {
   try {
-    const query = `INSERT INTO User (UserId, FullName, email, password,profilePic) VALUES (UUID(), ?, ?, ?,?);`;
+    const query = `INSERT INTO User (Id, FullName, email, password,profilePicture,about) VALUES (UUID(), ?, ?, ?,?,?);`;
     const result = await executeQuery(query, [
       fullName,
       email,
       password,
-      profilePic,
+      profilePicture,
       about,
     ]);
     return result;

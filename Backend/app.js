@@ -1,9 +1,12 @@
 const express = require("express");
 const app = express();
+const sequelize = require("./src/config/sequelize");
+
 const userRoutes = require("./src/routes/userRoutes");
 const authRoutes = require("./src/routes/authRoutes");
 const interestMasterRoute = require("./src/routes/interestMasterRoute");
-const sequelize = require("./src/config/sequelize");
+const userInterestRoute = require("./src/routes/userInterestRoute");
+
 const User = require("./src/model/userModel");
 const InterestMaster = require("./src/model/interestMasterModel");
 const UserInterest = require("./src/model/userInterestModel");
@@ -13,32 +16,23 @@ const Rating = require("./src/model/ratingModel");
 
 const models = {
   User,
-  InterestMaster,
-  UserInterest,
   Session,
+  UserInterest,
   Feedback,
+  InterestMaster,
   Rating,
 };
 
-function createTables() {
-  Object.keys(models).forEach((modelName) => {
-    if ("associate" in models[modelName]) {
-      models[modelName].associate(models);
-    }
-  });
-
-  // Sync models with the database
-  sequelize
-    .sync({ alter: true })
-    .then(() => {
-      console.log("Database & tables created!");
-    })
-    .catch((err) => {
-      console.error("Unable to create tables, shutting down...", err);
-      process.exit(1);
-    });
+async function createTables() {
+  try {
+    await sequelize.sync({ alter: true }); // Drop and recreate tables
+    console.log("Database & tables created!");
+  } catch (error) {
+    console.error("Unable to create tables:", error);
+  }
 }
-createTables();
+
+// createTables();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,6 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/interestMaster", interestMasterRoute);
+app.use("/userInterest", userInterestRoute);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

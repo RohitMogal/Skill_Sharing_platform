@@ -4,7 +4,7 @@ const sequelize = require("../config/sequelize");
 const User = sequelize.define(
   "User",
   {
-    UserId: {
+    Id: {
       type: DataTypes.CHAR(36),
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
@@ -26,19 +26,17 @@ const User = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: false,
     },
-    ProfilePic: {
+    ProfilePicture: {
       type: DataTypes.STRING(255),
-      allowNull: true,
+      allowNull: false,
     },
     Rating: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(3, 2),
+      allowNull: true,
     },
-    NumberOfRatings: {
+    NumberOfRating: {
       type: DataTypes.INTEGER,
-    },
-    IsDeleted: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      defaultValue: 0,
     },
     CreatedAt: {
       type: DataTypes.DATE,
@@ -48,17 +46,15 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
+    IsDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     timestamps: false,
     tableName: "User",
   },
 );
-
-User.associate = (models) => {
-  User.hasMany(models.UserInterest, { foreignKey: "UserId" });
-  User.hasMany(models.Session, { foreignKey: "UserId" });
-  User.hasMany(models.Feedback, { foreignKey: "UserId" });
-};
 
 module.exports = User;
