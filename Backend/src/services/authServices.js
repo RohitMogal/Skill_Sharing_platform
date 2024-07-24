@@ -3,7 +3,6 @@ const helper = require("../helper/helper");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const SECRET_KEY = process.env.SECRET_KEY;
-
 const loginUser = async (email, password) => {
   try {
     const user = await helper.userExist(email);
@@ -17,7 +16,8 @@ const loginUser = async (email, password) => {
 
     if (passwordMatch) {
       const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: "1h" });
-      return true;
+
+      return token;
     } else {
       return false;
     }
