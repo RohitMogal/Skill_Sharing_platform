@@ -30,8 +30,12 @@ const Session = sequelize.define(
       type: DataTypes.STRING(255),
       allowNull: true,
     },
-    InterestId: {
-      type: DataTypes.CHAR(36),
+    Interests: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    Img: {
+      type: DataTypes.STRING(255),
       allowNull: true,
     },
     Rating: {

@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Session2controller = require('../controllers/Session2controller'); // Ensure the correct path to your sessionController.js
+const sessionController = require("../controllers/Sessioncontroller");
 
-router.post('/', Session2controller.createsession);
-router.get('/', Session2controller.getSession);
-router.get('/:id', Session2controller.getSessionById);
-router.put('/:id', Session2controller.updateSession);
-router.delete('/:id', Session2controller.deleteSession);
+router.post("/", sessionController.createsession);
+router.get("/", sessionController.getSession);
+router.get("/:id", sessionController.getSessionById);
+router.put("/:id", sessionController.updateSession);
+router.delete("/:id", sessionController.deleteSession);
 
 module.exports = router;
