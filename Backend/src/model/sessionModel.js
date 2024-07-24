@@ -39,6 +39,12 @@ const Session = sequelize.define(
                 key: "InterestId",
             },
         },
+        SessionRating: {
+            type: DataTypes.DECIMAL(3, 2),
+        },
+        NumberOfRatings: {
+            type: DataTypes.INTEGER,
+        },
         SessionTime: {
             type: DataTypes.DATE,
         },
@@ -52,62 +58,8 @@ const Session = sequelize.define(
         },
     }, {
         timestamps: false,
-        tableName: "Session",
+        tableName: "Sessions",
     },
-<<<<<<< HEAD
-=======
-    UserId: {
-      type: DataTypes.CHAR(36),
-      allowNull: false,
-      references: {
-        model: User,
-        key: "UserId",
-      },
-    },
-    Description: {
-      type: DataTypes.TEXT,
-    },
-    Title: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-    Link: {
-      type: DataTypes.STRING(255),
-    },
-    SessionImg: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-    },
-    InterestId: {
-      type: DataTypes.CHAR(36),
-      references: {
-        model: UserInterest,
-        key: "InterestId",
-      },
-    },
-    SessionRating: {
-      type: DataTypes.DECIMAL(3, 2),
-    },
-    NumberOfRatings: {
-      type: DataTypes.INTEGER,
-    },
-    SessionTime: {
-      type: DataTypes.DATE,
-    },
-    IsDeleted: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    CreatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-  },
-  {
-    timestamps: false,
-    tableName: "Sessions",
-  },
->>>>>>> origin/Rohit-Branch-IM_(10666)_RM
 );
 
 Session.associate = (models) => {

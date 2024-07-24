@@ -1,10 +1,10 @@
 const FeedbackServices = require('../services/feedbackServices');
 
-const creatFeedback = async(req, res) => {
+const createFeedback = async(req, res) => {
     try {
         const { UserId, SessionId, FeedbackComment } = req.body;
 
-        const feedbackId = await FeedbackServices.createFeedback(UserId, SessionId, FeedbackComment);
+        const result = await FeedbackServices.createFeedback(UserId, SessionId, FeedbackComment);
         if (result) {
             res.status(200).json({
                 success: true,
@@ -56,7 +56,7 @@ const getFeedback = async(req, res) => {
 const getFeedbackBySession = async(req, res) => {
     try {
         const { sessionId } = req.params;
-        const feedback = await FeedbackServices.getFeedbackBySession(sessionId);
+        const result = await FeedbackServices.getFeedbackBySession(sessionId);
 
         if (result.length > 0) {
             res.status(200).json({
@@ -135,7 +135,7 @@ const deleteFeedback = async(req, res) => {
 };
 
 module.exports = {
-    creatFeedback,
+    createFeedback,
     getFeedback,
     getFeedbackBySession,
     updateFeedback,
