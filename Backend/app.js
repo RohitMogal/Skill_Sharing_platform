@@ -36,6 +36,21 @@ async function createTables() {
 
 // createTables();
 
+// //////////////////////////////////////
+// const { format } = require("date-fns-tz");
+
+// // Function to format the date and time in UTC for MySQL
+// const formatDateTimeForMySQL = (date) => {
+//   return format(date, "yyyy-MM-dd HH:mm:ss", { timeZone: "UTC" });
+// };
+
+// // Example usage
+// const now = new Date("2074-07-24T07:24:28.000Z");
+// const formattedDateTime = formatDateTimeForMySQL(now);
+// console.log(formattedDateTime); // Output: 2074-07-24 07:24:28
+
+// /////////////////////////
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -48,5 +63,5 @@ app.use("/userInterest", userInterestRoute);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
