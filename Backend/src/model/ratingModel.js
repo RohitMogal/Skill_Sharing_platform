@@ -6,30 +6,38 @@ const Session = require("./sessionModel");
 const Rating = sequelize.define(
   "Rating",
   {
-    RatingId: {
+    Id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
     UserId: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.CHAR(36),
       allowNull: false,
       references: {
         model: User,
-        key: "UserId",
+        key: "Id",
       },
     },
     SessionId: {
       type: DataTypes.INTEGER,
-      defaultValue: false,
+      allowNull: false,
       references: {
         model: Session,
-        key: "SessionId",
+        key: "Id",
       },
     },
     Rating: {
-      type: DataTypes.DECIMAL(3, 2),
-      defaultValue: 0,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    CreatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    IsDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {
@@ -37,9 +45,10 @@ const Rating = sequelize.define(
     tableName: "Rating",
   },
 );
+
 Rating.associate = (models) => {
-  Rating.hasMany(models.User, { foreignKey: "UserId" });
-  Rating.hasMany(models.Session, { foreignKey: "SessionId" });
+  Rating.belongsTo(models.User, { foreignKey: "UserId" });
+  Rating.belongsTo(models.Session, { foreignKey: "SessionId" });
 };
 
 module.exports = Rating;

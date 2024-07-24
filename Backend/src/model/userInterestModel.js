@@ -5,21 +5,30 @@ const User = require("./userModel");
 const UserInterest = sequelize.define(
   "UserInterest",
   {
-    InterestId: {
-      type: DataTypes.CHAR(36),
+    Id: {
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
+      autoIncrement: true,
     },
     UserId: {
       type: DataTypes.CHAR(36),
       allowNull: false,
       references: {
         model: User,
-        key: "UserId",
+        key: "Id",
       },
     },
     Interests: {
       type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    CreatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+    IsDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {
@@ -30,7 +39,6 @@ const UserInterest = sequelize.define(
 
 UserInterest.associate = (models) => {
   UserInterest.belongsTo(models.User, { foreignKey: "UserId" });
-  UserInterest.hasMany(models.Session, { foreignKey: "InterestId" });
 };
 
 module.exports = UserInterest;

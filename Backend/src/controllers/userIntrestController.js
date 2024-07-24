@@ -1,20 +1,15 @@
-const userServices = require("../services/userService");
+const userInterestServices = require("../services/userInterestService");
 const Joi = require("joi");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
 
-// Validation schemas
-const userValidation = Joi.object({
-  fullName: Joi.string().min(1).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-  profilePicture: Joi.string(),
-  about: Joi.string().required(),
+const userInterestValidation = Joi.object({
+  userId: Joi.string(),
+  interests: Joi.string().required(),
 });
 
-const createUser = async (req, res) => {
+// Create UserInterest
+const createUserInterest = async (req, res) => {
   try {
-    const { error } = userValidation.validate(req.body);
+    const { error } = userInterestValidation.validate(req.body);
     if (error) {
       return res.status(400).json({
         success: false,
@@ -23,28 +18,24 @@ const createUser = async (req, res) => {
       });
     }
 
-    const { fullName, email, password, profilePicture, about } = req.body;
-    const hashPassword = await bcrypt.hash(password, saltRounds);
+    const { userId, interests } = req.body;
 
-    const result = await userServices.createUser(
-      fullName,
-      email,
-      hashPassword,
-      profilePicture,
-      about,
+    const result = await userInterestServices.createUserInterest(
+      userId,
+      interests,
     );
 
     if (result) {
       res.status(200).json({
         success: true,
         data: result,
-        message: "User created successfully",
+        message: "User interest created successfully",
       });
     } else {
       res.status(400).json({
         success: false,
         data: null,
-        message: "User creation failed",
+        message: "User interest creation failed",
       });
     }
   } catch (error) {
@@ -56,9 +47,10 @@ const createUser = async (req, res) => {
   }
 };
 
-const getUser = async (req, res) => {
+// Get all UserInterests
+const getUserInterests = async (req, res) => {
   try {
-    const result = await userServices.getUser();
+    const result = await userInterestServices.getUserInterests();
 
     if (result.length > 0) {
       res.status(200).json({
@@ -70,7 +62,7 @@ const getUser = async (req, res) => {
       res.status(400).json({
         success: false,
         data: null,
-        message: "List retrieval failed",
+        message: "No user interests found",
       });
     }
   } catch (error) {
@@ -82,12 +74,13 @@ const getUser = async (req, res) => {
   }
 };
 
-const getUserById = async (req, res) => {
+// Get UserInterest by ID
+const getUserInterestById = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await userServices.getUserById(id);
+    const result = await userInterestServices.getUserInterestById(id);
 
-    if (result.length > 0) {
+    if (result) {
       res.status(200).json({
         success: true,
         data: result,
@@ -97,7 +90,7 @@ const getUserById = async (req, res) => {
       res.status(400).json({
         success: false,
         data: null,
-        message: "User not found",
+        message: "User interest not found",
       });
     }
   } catch (error) {
@@ -109,31 +102,34 @@ const getUserById = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+// Update UserInterest
+const updateUserInterest = async (req, res) => {
   try {
-    const { error } = userValidation.validate(req.body);
+    const { error } = userInterestValidation.validate(req.body);
     if (error) {
       return res.status(400).json({
         success: false,
         data: null,
-        message: bodyError.details[0].message,
+        message: error.details[0].message,
       });
     }
 
     const { id } = req.params;
-    const result = await userServices.updateUser(id, req.body);
+    const { interests } = req.body;
+
+    const result = await userInterestServices.updateUserInterest(id, interests);
 
     if (result) {
       res.status(200).json({
         success: true,
         data: result,
-        message: "User updated successfully",
+        message: "User interest updated successfully",
       });
     } else {
       res.status(400).json({
         success: false,
         data: null,
-        message: "User update failed",
+        message: "User interest update failed",
       });
     }
   } catch (error) {
@@ -145,22 +141,23 @@ const updateUser = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
+// Delete UserInterest
+const deleteUserInterest = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await userServices.deleteUser(id);
+    const result = await userInterestServices.deleteUserInterest(id);
 
     if (result) {
       res.status(200).json({
         success: true,
         data: null,
-        message: "User deleted successfully",
+        message: "User interest deleted successfully",
       });
     } else {
       res.status(400).json({
         success: false,
         data: null,
-        message: "User deletion failed",
+        message: "User interest deletion failed",
       });
     }
   } catch (error) {
@@ -172,4 +169,10 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { createUser, getUser, getUserById, updateUser, deleteUser };
+module.exports = {
+  createUserInterest,
+  getUserInterests,
+  getUserInterestById,
+  updateUserInterest,
+  deleteUserInterest,
+};

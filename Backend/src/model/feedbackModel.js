@@ -6,7 +6,7 @@ const Session = require("./sessionModel");
 const Feedback = sequelize.define(
   "Feedback",
   {
-    FeedbackId: {
+    Id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -16,7 +16,7 @@ const Feedback = sequelize.define(
       allowNull: false,
       references: {
         model: User,
-        key: "UserId",
+        key: "Id",
       },
     },
     SessionId: {
@@ -24,19 +24,20 @@ const Feedback = sequelize.define(
       allowNull: false,
       references: {
         model: Session,
-        key: "SessionId",
+        key: "Id",
       },
     },
     FeedbackComment: {
       type: DataTypes.TEXT,
-    },
-    IsDeleted: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+      allowNull: true,
     },
     CreatedAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
+    },
+    IsDeleted: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {

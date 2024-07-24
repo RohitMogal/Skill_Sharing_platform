@@ -1,186 +1,164 @@
-const db = require('../db/connection');
+const SessionServices = require("../services/SessionServices");
+// const { format } = require('date-fns');
 
-// Function to handle session creation
-const createSession = async(req, res) => {
-    console.log("Req", req.body);
-    try {
-        const { Description, title, link, tags, Time } = req.body;
+// // Function to format the date and time
+// const formatDateTimeForMySQL = (date) => {
+//   return format(date, 'yyyy-MM-dd HH:mm:ss');
+// };
 
-        // Check for missing fields
-        if (!Description || !title || !link) {
-            return res.status(400).json({
-                success: false,
-                message: "Please provide all required fields: Description, title, link"
-            });
-        }
+// // Example usage
+// const now = new Date();
+// const formattedDateTime = formatDateTimeForMySQL(now);
+// console.log(formattedDateTime);
 
-        // Insert Sessions into the database
-        const [result] = await db.query('INSERT INTO Sessions (guid, Description, title, link, tags, Time, created_at) VALUES (UUID(), ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)', [Description, title, link, tags, Time]);
+const createsession = async (req, res) => {
+  try {
+    const { UserId, Description, Title, Link, Img, Interests, SessionTime } =
+      req.body;
 
-        // Check if insertion was successful
-        if (!result.affectedRows) {
-            return res.status(500).json({
-                success: false,
-                message: "Error inserting session"
-            });
-        }
+    const result = await SessionServices.createsession(
+      UserId,
+      Description,
+      Title,
+      Link,
+      Img,
+      Interests,
+      SessionTime,
+    );
 
-        res.status(200).json({
-            success: true,
-            message: "Session created successfully",
-            session: {
-                guid: result.insertId,
-                Description,
-                title,
-                link,
-                tags,
-                Time,
-                created_at: new Date()
-            }
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: "Error in create session",
-            error: error.message
-        });
+    if (result) {
+      res.status(200).json({
+        success: true,
+        data: result,
+        message: "Session created successfully",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        data: null,
+        message: "Session creation failed",
+      });
     }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error.message,
+    });
+  }
 };
 
-const updateSession = async(req, res) => {
-    console.log("Req", req.body);
-    try {
-        const { guid, Description, title, link, tags, Time } = req.body;
+const getSession = async (req, res) => {
+  try {
+    const result = await SessionServices.getSession();
 
-        // Check for missing fields
-        if (!guid || !Description || !title || !link || !Time) {
-            return res.status(400).json({
-                success: false,
-                message: "Please provide all required fields: guid, Description, title, link, Time"
-            });
-        }
-
-        // Update the session in the database
-        const [result] = await db.query(
-            'UPDATE Sessions SET Description = ?, title = ?, link = ?, tags = ?, Time = ? WHERE guid = ?', [Description, title, link, tags, Time, guid]
-        );
-
-        // Check if the update was successful
-        if (result.affectedRows === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Session not found"
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Session updated successfully",
-            session: {
-                guid,
-                Description,
-                title,
-                link,
-                tags,
-                Time,
-                updated_at: new Date()
-            }
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: "Error updating session",
-            error: error.message
-        });
+    if (result.length > 0) {
+      res.status(200).json({
+        success: true,
+        data: result,
+        message: "Success",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        data: null,
+        message: "List retrieval failed",
+      });
     }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error.message,
+    });
+  }
 };
 
-const deleteSession = async(req, res) => {
-    console.log("Req", req.body);
-    try {
-        const { guid } = req.body;
+const getSessionById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await SessionServices.getSessionById(id);
 
-        // Check for missing fields
-        if (!guid) {
-            return res.status(400).json({
-                success: false,
-                message: "Please provide the guid of the session to delete"
-            });
-        }
-
-        // Delete the session from the database
-        const [result] = await db.query('DELETE FROM Sessions WHERE guid = ?', [guid]);
-
-        // Check if the deletion was successful
-        if (result.affectedRows === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Session not found"
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: "Session deleted successfully"
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: "Error deleting session",
-            error: error.message
-        });
+    if (result.length > 0) {
+      res.status(200).json({
+        success: true,
+        data: result,
+        message: "Success",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        data: null,
+        message: "Session not found",
+      });
     }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error.message,
+    });
+  }
 };
 
+const updateSession = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await SessionServices.updateSession(id, req.body);
 
-const getSessionById = async(req, res) => {
-    console.log("Req", req.params);
-    try {
-        const { guid } = req.params;
-
-        // Check for missing fields
-        if (!guid) {
-            return res.status(400).json({
-                success: false,
-                message: "Please provide the guid of the session to fetch"
-            });
-        }
-
-        // Fetch the session from the database
-        const [rows] = await db.query('SELECT * FROM Sessions WHERE guid = ?', [guid]);
-
-        // Check if the session exists
-        if (rows.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: "Session not found"
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            session: rows[0]
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            message: "Error fetching session",
-            error: error.message
-        });
+    if (result) {
+      res.status(200).json({
+        success: true,
+        data: result,
+        message: "Session updated successfully",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        data: null,
+        message: "Session update failed",
+      });
     }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error.message,
+    });
+  }
+};
+
+const deleteSession = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await SessionServices.deleteSession(id);
+
+    if (result) {
+      res.status(200).json({
+        success: true,
+        data: null,
+        message: "Session deleted successfully",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        data: null,
+        message: "Session deletion failed",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: error.message,
+    });
+  }
 };
 
 module.exports = {
-    createSession,
-    updateSession,
-    deleteSession,
-    getSessionById
+  createsession,
+  getSession,
+  getSessionById,
+  updateSession,
+  deleteSession,
 };

@@ -39,6 +39,7 @@ const verifyToken = (req, res, next) => {
     console.log(result);
     // process.exit();
     if (result.success) {
+      // res.status(500).json({ success: true, message: result.success });
       next();
     } else {
       res.status(500).json({ success: false, message: result.message });

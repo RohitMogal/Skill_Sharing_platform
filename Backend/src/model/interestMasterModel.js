@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/sequelize");
 
-const InterestMaster = sequelize.define(
-  "InterestMaster",
+const Interest = sequelize.define(
+  "Interest",
   {
     Id: {
       type: DataTypes.INTEGER,
@@ -14,15 +14,15 @@ const InterestMaster = sequelize.define(
       allowNull: false,
       unique: true,
     },
-    IsDeleted: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    CreatedAt: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
     timestamps: false,
-    tableName: "InterestMaster",
+    tableName: "Interest",
   },
 );
 
-module.exports = InterestMaster;
+module.exports = Interest;
