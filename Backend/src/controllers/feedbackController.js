@@ -110,7 +110,7 @@ const updateFeedback = async(req, res) => {
 const deleteFeedback = async(req, res) => {
     try {
         const { id } = req.params;
-        const result = await SessionServices.deleteFeedback(id);
+        const result = await FeedbackServices.deleteFeedback(id);
 
         if (result) {
             res.status(200).json({
@@ -133,6 +133,7 @@ const deleteFeedback = async(req, res) => {
         });
     }
 };
+
 
 module.exports = {
     createFeedback,

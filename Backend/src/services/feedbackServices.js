@@ -1,18 +1,17 @@
 const executeQuery = require("../config/db_config");
 
-const createFeedback = async(UserId, SessionId, FeedbackComment) => {
+const createFeedback = async(userId, sessionId, feedbackComment) => {
     try {
-        console.log("Parameters received:", { UserId, Description, Title, Link, SessionImg, InterestId, SessionTime });
-
-        const query = 'INSERT INTO Feedback (UserId, SessionId, FeedbackComment, CreatedAt) VALUES (?, ?, ?, NOW())';
-
-        const result = await executeQuery(query, [UserId, SessionId, FeedbackComment]);
+        const query = `
+            INSERT INTO Feedback (UserId, SessionId, FeedbackComment, CreatedAt) 
+            VALUES (?, ?, ?, NOW())
+        `;
+        const result = await executeQuery(query, [userId, sessionId, feedbackComment]);
         return result;
     } catch (err) {
         throw new Error("Error creating Feedback: " + err.message);
     }
 };
-
 const getFeedback = async() => {
     try {
         const query = `SELECT * FROM Feedback WHERE IsDeleted = false`;
@@ -34,7 +33,7 @@ const getFeedbackBySession = async(SessionId) => {
 };
 
 /// id =? or session id= ? ask to mentor
-const updateFeedback = async(id, updates) => {
+const updateFeedback = async(feedbackId, updates) => {
     try {
         let query = `UPDATE Feedback SET `;
         const fields = [];
@@ -55,6 +54,7 @@ const updateFeedback = async(id, updates) => {
         throw new Error("Error updating feedback: " + err.message);
     }
 };
+
 
 const deleteFeedback = async(id) => {
     try {

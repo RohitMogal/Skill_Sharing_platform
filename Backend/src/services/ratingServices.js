@@ -1,22 +1,19 @@
 const executeQuery = require("../config/db_config");
 
-const createRating = async(UserId, SessionId, Rating, CreatedAt, IsDeleted) => {
+const createRating = async(UserId, SessionId, Rating) => {
     try {
-        console.log("Parameters received:", { UserId, SessionId, Rating, CreatedAt, IsDeleted });
-
         const query = `
-            INSERT INTO session
+            INSERT INTO Rating
             (UserId, SessionId, Rating, CreatedAt, IsDeleted) 
             VALUES 
-            (?, ?, ?, NOW(),?);
+            (?, ?, ?, NOW(), 0);
         `;
-        const result = await executeQuery(query, [UserId, SessionId, Rating, CreatedAt, IsDeleted]);
+        const result = await executeQuery(query, [UserId, SessionId, Rating]);
         return result;
     } catch (err) {
-        throw new Error("Error Rating session: " + err.message);
+        throw new Error("Error creating rating: " + err.message);
     }
 };
-
 
 const getRating = async() => {
     try {
@@ -24,7 +21,7 @@ const getRating = async() => {
         const result = await executeQuery(query, []);
         return result;
     } catch (err) {
-        throw new Error("Error fetching rating: " + err.message);
+        throw new Error("Error fetching ratings: " + err.message);
     }
 };
 
@@ -49,7 +46,7 @@ const updateRating = async(id, updates) => {
             values.push(value);
         }
 
-        query += fields.join(", ") + " WHERE ID = ?";
+        query += fields.join(", ") + " WHERE Id = ?";
 
         values.push(id);
 
@@ -66,7 +63,7 @@ const deleteRating = async(id) => {
         const result = await executeQuery(query, [id]);
         return result;
     } catch (err) {
-        throw new Error("Error deleting Rating: " + err.message);
+        throw new Error("Error deleting rating: " + err.message);
     }
 };
 

@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const sessionController = require("../controllers/Sessioncontroller");
 
-router.post("/", sessionController.createsession);
+router.post("/", sessionController.createSession);
 router.get("/", sessionController.getSession);
 router.get("/:id", sessionController.getSessionById);
 router.put("/:id", sessionController.updateSession);
