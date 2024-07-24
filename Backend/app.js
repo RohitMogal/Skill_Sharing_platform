@@ -14,7 +14,6 @@ const InterestMaster = require("./src/model/interestMasterModel");
 const UserInterest = require("./src/model/userInterestModel");
 const Session = require("./src/model/sessionModel");
 const Feedback = require("./src/model/feedbackModel");
-const Rating = require("./src/model/ratingModel");
 
 const models = {
   User,
