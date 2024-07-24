@@ -1,46 +1,46 @@
 const executeQuery = require("../config/db_config");
 
-const createRating = async(UserId, SessionId, Rating, CreatedAt, IsDeleted) => {
+const createsession = async(UserId, Description, Title, Link, SessionImg, InterestId, SessionTime) => {
     try {
-        console.log("Parameters received:", { UserId, SessionId, Rating, CreatedAt, IsDeleted });
+        console.log("Parameters received:", { UserId, Description, Title, Link, SessionImg, InterestId, SessionTime });
 
         const query = `
             INSERT INTO session
-            (UserId, SessionId, Rating, CreatedAt, IsDeleted) 
+            (UserId, Description, Title, Link, SessionImg, InterestId, SessionTime, CreatedAt) 
             VALUES 
-            (?, ?, ?, NOW(),?);
+            (?, ?, ?, ?, ?, ?, ?, NOW());
         `;
-        const result = await executeQuery(query, [UserId, SessionId, Rating, CreatedAt, IsDeleted]);
+        const result = await executeQuery(query, [UserId, Description, Title, Link, SessionImg, InterestId, SessionTime]);
         return result;
     } catch (err) {
-        throw new Error("Error Rating session: " + err.message);
+        throw new Error("Error creating session: " + err.message);
     }
 };
 
 
-const getRating = async() => {
+const getSession = async() => {
     try {
-        const query = `SELECT * FROM Rating WHERE IsDeleted = false`;
+        const query = `SELECT * FROM session WHERE IsDeleted = false`;
         const result = await executeQuery(query, []);
         return result;
     } catch (err) {
-        throw new Error("Error fetching rating: " + err.message);
+        throw new Error("Error fetching sessions: " + err.message);
     }
 };
 
-const getRatingById = async(id) => {
+const getSessionById = async(id) => {
     try {
-        const query = `SELECT * FROM Rating WHERE Id = ? AND IsDeleted = false`;
+        const query = `SELECT * FROM session WHERE SessionId = ? AND IsDeleted = false`;
         const result = await executeQuery(query, [id]);
         return result;
     } catch (err) {
-        throw new Error("Error fetching rating by ID: " + err.message);
+        throw new Error("Error fetching session by ID: " + err.message);
     }
 };
 
-const updateRating = async(id, updates) => {
+const updateSession = async(id, updates) => {
     try {
-        let query = `UPDATE Rating SET `;
+        let query = `UPDATE session SET `;
         const fields = [];
         const values = [];
 
@@ -49,25 +49,25 @@ const updateRating = async(id, updates) => {
             values.push(value);
         }
 
-        query += fields.join(", ") + " WHERE ID = ?";
+        query += fields.join(", ") + " WHERE SessionId = ?";
 
         values.push(id);
 
         const result = await executeQuery(query, values);
         return result;
     } catch (err) {
-        throw new Error("Error updating rating: " + err.message);
+        throw new Error("Error updating session: " + err.message);
     }
 };
 
-const deleteRating = async(id) => {
+const deleteSession = async(id) => {
     try {
-        const query = `UPDATE Rating SET IsDeleted = true WHERE Id = ? `;
+        const query = `UPDATE session SET IsDeleted = true WHERE SessionId = ? `;
         const result = await executeQuery(query, [id]);
         return result;
     } catch (err) {
-        throw new Error("Error deleting Rating: " + err.message);
+        throw new Error("Error deleting session: " + err.message);
     }
 };
 
-module.exports = { createRating, getRating, getRatingById, updateRating, deleteRating };
+module.exports = { createsession, getSession, getSessionById, updateSession, deleteSession };
