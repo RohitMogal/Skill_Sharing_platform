@@ -1,9 +1,10 @@
 const executeQuery = require("../config/db_config");
 
+// Function to create a new Rating
 const createRating = async(UserId, SessionId, Rating) => {
     try {
         const query = `
-            INSERT INTO Rating
+            INSERT INTO rating
             (UserId, SessionId, Rating, CreatedAt, IsDeleted) 
             VALUES 
             (?, ?, ?, NOW(), 0);
@@ -15,52 +16,48 @@ const createRating = async(UserId, SessionId, Rating) => {
     }
 };
 
+// Function to get all Rating
 const getRating = async() => {
     try {
-        const query = `SELECT * FROM Rating WHERE IsDeleted = false`;
-        const result = await executeQuery(query, []);
+        const query = `SELECT UserId, SessionId, Rating FROM rating WHERE IsDeleted = ?`;
+        const result = await executeQuery(query, [false]);
         return result;
     } catch (err) {
         throw new Error("Error fetching ratings: " + err.message);
     }
 };
 
+// Function to retrieve a specific rating by its ID
 const getRatingById = async(id) => {
     try {
-        const query = `SELECT * FROM Rating WHERE Id = ? AND IsDeleted = false`;
-        const result = await executeQuery(query, [id]);
+        const query = `SELECT UserId, SessionId, Rating FROM rating WHERE Id = ? AND IsDeleted = ?`;
+        const result = await executeQuery(query, [false]);
         return result;
     } catch (err) {
         throw new Error("Error fetching rating by ID: " + err.message);
     }
 };
 
-const updateRating = async(id, updates) => {
+// Function to update a specific Rating
+const updateRating = async(UserId, SessionId, Rating) => {
     try {
-        let query = `UPDATE Rating SET `;
-        const fields = [];
-        const values = [];
+        let query = `UPDATE rating SET UserId, SessionId, Rating WHERE id=?`;
 
-        for (const [key, value] of Object.entries(updates)) {
-            fields.push(`${key} = ?`);
-            values.push(value);
-        }
-
-        query += fields.join(", ") + " WHERE Id = ?";
-
-        values.push(id);
-
-        const result = await executeQuery(query, values);
+        const result = await executeQuery(query, [
+            UserId,
+            SessionId,
+            Rating
+        ]);
         return result;
     } catch (err) {
-        throw new Error("Error updating rating: " + err.message);
+        throw new Error("Error updating Rating: " + err.message);
     }
 };
 
 const deleteRating = async(id) => {
     try {
-        const query = `UPDATE Rating SET IsDeleted = true WHERE Id = ? `;
-        const result = await executeQuery(query, [id]);
+        const query = `UPDATE rating DELETE IsDeleted = true WHERE Id = ? `;
+        const result = await executeQuery(query, [true, id]);
         return result;
     } catch (err) {
         throw new Error("Error deleting rating: " + err.message);

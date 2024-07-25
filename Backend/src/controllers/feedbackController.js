@@ -1,5 +1,6 @@
 const FeedbackServices = require('../services/feedbackServices');
 
+// Function to create new feedback
 const createFeedback = async(req, res) => {
     try {
         const { UserId, SessionId, FeedbackComment } = req.body;
@@ -27,9 +28,10 @@ const createFeedback = async(req, res) => {
     }
 };
 
+// Function to fet all feedback
 const getFeedback = async(req, res) => {
     try {
-        const result = await feedbackServices.getFeedback();
+        const result = await FeedbackServices.getFeedback();
 
         if (result.length > 0) {
             res.status(200).json({
@@ -41,7 +43,7 @@ const getFeedback = async(req, res) => {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "List retrieval failed",
+                message: "List of all Feedback retrieval failed",
             });
         }
     } catch (error) {
@@ -53,10 +55,11 @@ const getFeedback = async(req, res) => {
     }
 };
 
+// function to get specific feedback by id
 const getFeedbackBySession = async(req, res) => {
     try {
-        const { sessionId } = req.params;
-        const result = await FeedbackServices.getFeedbackBySession(sessionId);
+        const { Id } = req.params;
+        const result = await FeedbackServices.getFeedbackBySession(Id);
 
         if (result.length > 0) {
             res.status(200).json({
@@ -68,7 +71,7 @@ const getFeedbackBySession = async(req, res) => {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "List retrieval failed",
+                message: "Feedback not found",
             });
         }
     } catch (error) {
@@ -80,10 +83,12 @@ const getFeedbackBySession = async(req, res) => {
     }
 };
 
+
+//Update any specific feedback
 const updateFeedback = async(req, res) => {
     try {
-        const { id } = req.params;
-        const result = await FeedbackServices.updateFeedback(id, req.body);
+        const { UserId, SessionId, FeedbackComment } = req.body;
+        const result = await FeedbackServices.updateFeedback(req.params.id, UserId, SessionId, FeedbackComment);
 
         if (result) {
             res.status(200).json({
@@ -107,6 +112,7 @@ const updateFeedback = async(req, res) => {
     }
 };
 
+// Soft Delete any specific existing feedback 
 const deleteFeedback = async(req, res) => {
     try {
         const { id } = req.params;
@@ -133,7 +139,6 @@ const deleteFeedback = async(req, res) => {
         });
     }
 };
-
 
 module.exports = {
     createFeedback,

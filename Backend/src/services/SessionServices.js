@@ -1,23 +1,24 @@
 const executeQuery = require("../config/db_config");
 
-const createSession = async(userId, description, title, link, sessionImg, interestId, sessionRating, sessionTime) => {
+// Function to create a new session 
+const createSession = async(UserId, Description, Title, Link, Img, Interests, SessionTime) => {
     try {
+        // SQL query to insert a new session record into the 'session' table
         const query = `
-      INSERT INTO Session 
-      (Id,UserId, Description, Title, Link, SessionImg, InterestId, SessionRating, SessionTime,CreatedAt, UpdatedAt) 
-      VALUES 
-      (UUID(),?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW());
-    `;
+            INSERT INTO session
+            (UserId, Description, Title, Link, Img, Interests, SessionTime, CreatedAt) 
+            VALUES 
+            (?, ?, ?, ?, ?, ?, ?, NOW());
+        `;
 
         const result = await executeQuery(query, [
-            userId,
-            description,
-            title,
-            link,
-            sessionImg,
-            interestId,
-            sessionRating,
-            sessionTime
+            UserId,
+            Description,
+            Title,
+            Link,
+            Img,
+            Interests,
+            SessionTime
         ]);
 
         return result;
@@ -27,54 +28,52 @@ const createSession = async(userId, description, title, link, sessionImg, intere
 };
 
 
-
-
+// Function to retrieve all non-deleted sessions 
 const getSession = async() => {
     try {
-        const query = `SELECT * FROM session WHERE IsDeleted = false`;
-        const result = await executeQuery(query, []);
+        const query = `SELECT Description, Title, Link, Img, Interests, SessionTime FROM session WHERE IsDeleted = ?`;
+        const result = await executeQuery(query, [false]);
         return result;
     } catch (err) {
         throw new Error("Error fetching sessions: " + err.message);
     }
 };
 
+// Function to retrieve a specific session by its ID 
 const getSessionById = async(id) => {
     try {
-        const query = `SELECT * FROM session WHERE SessionId = ? AND IsDeleted = false`;
-        const result = await executeQuery(query, [id]);
+        const query = `SELECT Description, Title, Link, Img, Interests,  SessionTime FROM session WHERE  IsDeleted = ?`;
+        const result = await executeQuery(query, [id, false]);
         return result;
     } catch (err) {
         throw new Error("Error fetching session by ID: " + err.message);
     }
 };
 
-const updateSession = async(id, updates) => {
+// Function to update a specific session 
+const updateSession = async(Description, Title, Link, Img, Interests, SessionTime) => {
     try {
-        let query = `UPDATE session SET `;
-        const fields = [];
-        const values = [];
+        let query = `UPDATE session SET Description=?, Title=?, Link=?, Img=?, Interests=?, SessionRating=?, SessionTime=? WHERE id=?`;
 
-        for (const [key, value] of Object.entries(updates)) {
-            fields.push(`${key} = ?`);
-            values.push(value);
-        }
-
-        query += fields.join(", ") + " WHERE SessionId = ?";
-
-        values.push(id);
-
-        const result = await executeQuery(query, values);
+        const result = await executeQuery(query, [
+            Description,
+            Title,
+            Link,
+            Img,
+            Interests,
+            SessionTime,
+        ]);
         return result;
     } catch (err) {
         throw new Error("Error updating session: " + err.message);
     }
 };
 
+// Function to delete (soft delete) a specific session 
 const deleteSession = async(id) => {
     try {
-        const query = `UPDATE session SET IsDeleted = true WHERE SessionId = ? `;
-        const result = await executeQuery(query, [id]);
+        const query = `UPDATE session DELETE IsDeleted = true WHERE SessionId = ?`;
+        const result = await executeQuery(query, [true, id]);
         return result;
     } catch (err) {
         throw new Error("Error deleting session: " + err.message);

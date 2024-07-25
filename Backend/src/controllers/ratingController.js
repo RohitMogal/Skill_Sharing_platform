@@ -1,5 +1,6 @@
 const ratingServices = require("../services/ratingServices");
 
+//Function to create new rating
 const createRating = async(req, res) => {
     try {
         const { UserId, SessionId, Rating } = req.body;
@@ -27,7 +28,7 @@ const createRating = async(req, res) => {
         });
     }
 };
-
+// Function to fet all Ratings
 const getRating = async(req, res) => {
     try {
         const result = await ratingServices.getRating();
@@ -42,7 +43,7 @@ const getRating = async(req, res) => {
             res.status(400).json({
                 success: false,
                 data: null,
-                message: "List retrieval failed",
+                message: "List of Rating retrieval failed",
             });
         }
     } catch (error) {
@@ -54,6 +55,7 @@ const getRating = async(req, res) => {
     }
 };
 
+//Get specific rating rating by id 
 const getRatingById = async(req, res) => {
     try {
         const { id } = req.params;
@@ -81,10 +83,11 @@ const getRatingById = async(req, res) => {
     }
 };
 
+// Update specific rating by id
 const updateRating = async(req, res) => {
     try {
-        const { id } = req.params;
-        const result = await ratingServices.updateRating(id, req.body);
+        const { UserId, SessionId, Rating } = req.body;
+        const result = await ratingServices.updateRating(req.params.id, UserId, SessionId, Rating);
 
         if (result) {
             res.status(200).json({
