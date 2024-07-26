@@ -51,7 +51,7 @@ const createUser = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -77,15 +77,14 @@ const getUser = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
 
 const getUserById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const result = await userServices.getUserById(id);
+    const result = await userServices.getUserById(req.params.id);
 
     if (result.length > 0) {
       res.status(200).json({
@@ -104,7 +103,7 @@ const getUserById = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -119,9 +118,16 @@ const updateUser = async (req, res) => {
         message: bodyError.details[0].message,
       });
     }
+    const { fullName, email, password, profilePicture, about } = req.body;
 
-    const { id } = req.params;
-    const result = await userServices.updateUser(id, req.body);
+    const result = await userServices.updateUser(
+      req.params.id,
+      fullName,
+      email,
+      password,
+      profilePicture,
+      about,
+    );
 
     if (result) {
       res.status(200).json({
@@ -140,7 +146,7 @@ const updateUser = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -167,7 +173,7 @@ const deleteUser = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };

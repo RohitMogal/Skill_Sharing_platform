@@ -25,8 +25,8 @@ const getUserInterests = async () => {
 // Get UserInterest by ID
 const getUserInterestById = async (id) => {
   try {
-    const query = `SELECT * FROM UserInterest WHERE Id = ? AND IsDeleted = false`;
-    const result = await executeQuery(query, [id]);
+    const query = `SELECT * FROM UserInterest WHERE Id = ? AND IsDeleted = ?`;
+    const result = await executeQuery(query, [id, false]);
     return result;
   } catch (err) {
     throw new Error("Error fetching user interest by ID: " + err.message);
@@ -36,7 +36,7 @@ const getUserInterestById = async (id) => {
 // Update UserInterest
 const updateUserInterest = async (id, interests) => {
   try {
-    let query = `UPDATE UserInterest SET interests="${interests}" `;
+    let query = `UPDATE UserInterest SET interests=? `;
     console.log(query);
     // process.exit();
     const result = await executeQuery(query, [interests]);
@@ -49,8 +49,8 @@ const updateUserInterest = async (id, interests) => {
 // Delete UserInterest
 const deleteUserInterest = async (id) => {
   try {
-    const query = `UPDATE UserInterest SET IsDeleted = true WHERE Id = ?`;
-    const result = await executeQuery(query, [id]);
+    const query = `UPDATE UserInterest SET IsDeleted =?  WHERE Id = ?`;
+    const result = await executeQuery(query, [true, id]);
     return result;
   } catch (err) {
     throw new Error("Error deleting user interest: " + err.message);

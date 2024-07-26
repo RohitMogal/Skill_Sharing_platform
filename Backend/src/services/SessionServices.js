@@ -10,16 +10,6 @@ const createsession = async (
   SessionTime,
 ) => {
   try {
-    console.log("Parameters received:", {
-      UserId,
-      Description,
-      Title,
-      Link,
-      Img,
-      Interests,
-      SessionTime,
-    });
-
     const query = `
             INSERT INTO session
             (UserId, Description, Title, Link, Img, Interests, SessionTime, CreatedAt) 
@@ -43,8 +33,8 @@ const createsession = async (
 
 const getSession = async () => {
   try {
-    const query = `SELECT * FROM session WHERE IsDeleted = false`;
-    const result = await executeQuery(query, []);
+    const query = `SELECT * FROM session WHERE IsDeleted = ?`;
+    const result = await executeQuery(query, [false]);
     return result;
   } catch (err) {
     throw new Error("Error fetching sessions: " + err.message);
@@ -53,8 +43,8 @@ const getSession = async () => {
 
 const getSessionById = async (id) => {
   try {
-    const query = `SELECT * FROM session WHERE SessionId = ? AND IsDeleted = false`;
-    const result = await executeQuery(query, [id]);
+    const query = `SELECT * FROM session WHERE SessionId = ? AND IsDeleted = ?`;
+    const result = await executeQuery(query, [id, false]);
     return result;
   } catch (err) {
     throw new Error("Error fetching session by ID: " + err.message);
@@ -85,8 +75,8 @@ const updateSession = async (id, updates) => {
 
 const deleteSession = async (id) => {
   try {
-    const query = `UPDATE session SET IsDeleted = true WHERE SessionId = ? `;
-    const result = await executeQuery(query, [id]);
+    const query = `UPDATE session SET IsDeleted = ? WHERE SessionId = ? `;
+    const result = await executeQuery(query, [true, id]);
     return result;
   } catch (err) {
     throw new Error("Error deleting session: " + err.message);

@@ -1,26 +1,30 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
+  service: "gmail",
   auth: {
-    user: "aliza.jones@ethereal.email",
-    pass: "uWuXASfzkHwt8jKJTY",
+    user: "rohitmogal445@gmail.com",
+    pass: "vvquvcbcnskbabng", // Use an App Password if you have 2-Step Verification enabled
   },
 });
-// async..await is not allowed in global scope, must use a wrapper
-async function main() {
-  // send mail with defined transport object
-  const info = await transporter.sendMail({
-    from: '"Mail from Skill Sharing platform" <aliza.jones@ethereal.email>', // sender address
-    to: "Rohit.Mogal@winjit.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
+
+const sendEmail = (to, subject, text) => {
+  const mailOptions = {
+    from: "rohitmogal445@gmail.com",
+    to,
+    subject,
+    text,
+  };
+
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return reject(error);
+      }
+      console.log(info);
+      resolve(info);
+    });
   });
+};
 
-  console.log("Message sent: %s", info.messageId);
-  // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
-}
-
-main().catch(console.error);
+module.exports = { sendEmail };

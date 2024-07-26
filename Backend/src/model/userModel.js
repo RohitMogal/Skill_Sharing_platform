@@ -34,10 +34,7 @@ const User = sequelize.define(
       type: DataTypes.DECIMAL(3, 2),
       allowNull: true,
     },
-    NumberOfRating: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    },
+
     CreatedAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,

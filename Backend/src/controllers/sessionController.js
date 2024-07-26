@@ -43,7 +43,7 @@ const createsession = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -69,7 +69,7 @@ const getSession = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -96,7 +96,7 @@ const getSessionById = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -123,7 +123,7 @@ const updateSession = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -150,7 +150,7 @@ const deleteSession = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };

@@ -2,8 +2,8 @@ const executeQuery = require("../config/db_config");
 
 const createInterest = async (Interest) => {
   try {
-    const query = `INSERT INTO InterestMaster (Interest, IsDeleted) VALUES (?, false);`;
-    const result = await executeQuery(query, [Interest]);
+    const query = `INSERT INTO InterestMaster (Interest, IsDeleted) VALUES (?, ?);`;
+    const result = await executeQuery(query, [Interest, false]);
     return result;
   } catch (err) {
     throw new Error("Error creating interest: " + err.message);
@@ -12,7 +12,7 @@ const createInterest = async (Interest) => {
 
 const getInterest = async () => {
   try {
-    const query = `SELECT * FROM InterestMaster`;
+    const query = `SELECT Interest FROM InterestMaster`;
     const result = await executeQuery(query, []);
     return result;
   } catch (err) {
@@ -22,8 +22,8 @@ const getInterest = async () => {
 
 const getInterestById = async (id) => {
   try {
-    const query = `SELECT * FROM InterestMaster WHERE Id = ? AND IsDeleted = false;`;
-    const result = await executeQuery(query, [id]);
+    const query = `SELECT Interest FROM InterestMaster WHERE Id = ? AND IsDeleted = ?;`;
+    const result = await executeQuery(query, [id, false]);
     return result;
   } catch (err) {
     throw new Error("Error retrieving interest: " + err.message);
@@ -32,8 +32,8 @@ const getInterestById = async (id) => {
 
 const updateInterest = async (id, Interest) => {
   try {
-    const query = `UPDATE InterestMaster SET Interest = ? WHERE Id = ? AND IsDeleted = false;`;
-    const result = await executeQuery(query, [Interest, id]);
+    const query = `UPDATE InterestMaster SET Interest = ? WHERE Id = ? AND IsDeleted = ?;`;
+    const result = await executeQuery(query, [Interest, id, false]);
     console.log(result);
     return result;
   } catch (err) {
@@ -43,8 +43,8 @@ const updateInterest = async (id, Interest) => {
 
 const deleteInterest = async (id) => {
   try {
-    const query = `UPDATE InterestMaster SET IsDeleted = true WHERE Id = ?;`;
-    const result = await executeQuery(query, [id]);
+    const query = `UPDATE InterestMaster SET IsDeleted = ? WHERE Id = ?;`;
+    const result = await executeQuery(query, [true, id]);
     return result;
   } catch (err) {
     throw new Error("Error deleting interest: " + err.message);

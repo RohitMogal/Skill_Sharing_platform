@@ -1,10 +1,12 @@
 const executeQuery = require("../config/db_config");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const { uuid } = require("uuidv4");
+
 const createUser = async (fullName, email, password, profilePicture, about) => {
   try {
-    const query = `INSERT INTO User (Id, FullName, email, password,profilePicture,about,createdAt,updatedAt) VALUES (UUID(), ?, ?, ?,?,?,NOW(),NOW());`;
+    const id = uuid();
+    const query = `INSERT INTO User u (id, fullName, email, password,profilePicture,about,createdat,updatedat) VALUES (?, ?, ?, ?,?,?,NOW(),NOW());`;
     const result = await executeQuery(query, [
+      id,
       fullName,
       email,
       password,
@@ -19,8 +21,8 @@ const createUser = async (fullName, email, password, profilePicture, about) => {
 
 const getUser = async () => {
   try {
-    const query = `SELECT * FROM User WHERE IsDeleted = false`;
-    const result = await executeQuery(query, []);
+    const query = `SELECT fullName, email, password, profilePicture,rating,about FROM User u WHERE IsDeleted = ?`;
+    const result = await executeQuery(query, [false]);
     return result;
   } catch (err) {
     throw new Error("Error fetching users: " + err.message);
@@ -29,36 +31,40 @@ const getUser = async () => {
 
 const getUserById = async (id) => {
   try {
-    const query = `SELECT * FROM User WHERE UserId = ? AND IsDeleted = false`;
-    const result = await executeQuery(query, [id]);
+    const getUserRatingQuery = `SELECT AVG(Rating) AS Rating from session WHERE userid=? Group By UserId `;
+    const getUserRatingResult = await executeQuery(getUserRatingQuery, [id]);
+    const updateUserRatingQuery = `UPDATE User SET Rating=? WHERE id=? `;
+    await executeQuery(updateUserRatingQuery, [
+      getUserRatingResult[0].Rating,
+      id,
+    ]);
+    const query = `SELECT fullName, email, password, profilePicture,rating,about FROM User u WHERE Id = ? AND IsDeleted = ?`;
+    const result = await executeQuery(query, [id, false]);
+
     return result;
   } catch (err) {
     throw new Error("Error fetching user by ID: " + err.message);
   }
 };
 
-const updateUser = async (id, updates) => {
+const updateUser = async (
+  id,
+  fullName,
+  email,
+  password,
+  profilePicture,
+  about,
+) => {
   try {
-    let query = `UPDATE User SET `;
-    const fields = [];
-    const values = [];
-    let hashPassword;
-
-    for (const [key, value] of Object.entries(updates)) {
-      fields.push(`${key} = ?`);
-      if (key == "password") {
-        hashPassword = await bcrypt.hash(value, saltRounds);
-        values.push(hashPassword);
-      } else {
-        values.push(value);
-      }
-    }
-
-    query += fields.join(", ") + " WHERE UserId = ?";
-
-    values.push(id);
-
-    const result = await executeQuery(query, values);
+    let query = `UPDATE User u SET fullName=? email=? password=? profilePicture=? about=? where id=?`;
+    const result = await executeQuery(query, [
+      fullName,
+      email,
+      password,
+      profilePicture,
+      about,
+      id,
+    ]);
     return result;
   } catch (err) {
     throw new Error("Error updating user: " + err.message);
@@ -67,8 +73,8 @@ const updateUser = async (id, updates) => {
 
 const deleteUser = async (id) => {
   try {
-    const query = `UPDATE User SET IsDeleted = true WHERE UserId = ? `;
-    const result = await executeQuery(query, [id]);
+    const query = `UPDATE User u SET IsDeleted = ? WHERE UserId = ? `;
+    const result = await executeQuery(query, [true, id]);
     return result;
   } catch (err) {
     throw new Error("Error deleting user: " + err.message);

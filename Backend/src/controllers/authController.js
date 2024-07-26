@@ -5,16 +5,16 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     const result = await authService.loginUser(email, password);
-
-    if (result) {
+    console.log(result);
+    if (result.success == true) {
       const token = result.token;
 
       console.log("inside return");
       console.log(result);
 
-      res.status(200).json({ success: true, token: result });
+      res.status(200).json(result);
     } else {
-      res.status(401).json({ success: false, message: "Invalid credentials" });
+      res.status(401).json(result);
     }
   } catch (error) {
     console.error(error);
@@ -24,7 +24,6 @@ const login = async (req, res) => {
 
 const verifyToken = (req, res, next) => {
   try {
-    console.log("insiede verigy");
     // process.exit();
     let token = req.headers["authorization"];
     token = token.slice(7);
@@ -35,12 +34,12 @@ const verifyToken = (req, res, next) => {
         .json({ success: false, message: "No token provided" });
     }
 
-    const result = authService.verifyToken(token);
+    const result = authService.verifyToken(token, req.body.id);
     console.log(result);
     // process.exit();
     if (result.success) {
-      // res.status(500).json({ success: true, message: result.success });
-      next();
+      res.status(500).json({ success: true, message: result.message });
+      // next();
     } else {
       res.status(500).json({ success: false, message: result.message });
     }
