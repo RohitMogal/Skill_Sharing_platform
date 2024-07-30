@@ -68,7 +68,13 @@ const getSession = async () => {
   try {
     const query = `SELECT UserId, Description, Title, Link, Img, Interests, SessionTime, Amount FROM session WHERE IsDeleted = ?`;
     const result = await executeQuery(query, [false]);
-    return result;
+    const parsedResult = result.map((session) => {
+      return {
+        ...session,
+        Interests: JSON.parse(session.Interests),
+      };
+    });
+    return parsedResult;
   } catch (err) {
     throw new Error("Error fetching sessions: " + err.message);
   }

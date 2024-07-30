@@ -10,6 +10,7 @@ const userValidation = Joi.object({
   password: Joi.string().min(6).required(),
   profilePicture: Joi.string(),
   about: Joi.string().required(),
+  interests: Joi.array().required(),
 });
 
 const createUser = async (req, res) => {
@@ -23,7 +24,8 @@ const createUser = async (req, res) => {
       });
     }
 
-    const { fullName, email, password, profilePicture, about } = req.body;
+    const { fullName, email, password, profilePicture, about, interests } =
+      req.body;
 
     const hashPassword = await bcrypt.hash(password, saltRounds);
     console.log(hashPassword);
@@ -33,6 +35,7 @@ const createUser = async (req, res) => {
       hashPassword,
       profilePicture,
       about,
+      interests,
     );
 
     if (result) {

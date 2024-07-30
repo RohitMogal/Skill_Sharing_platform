@@ -1,7 +1,14 @@
 const executeQuery = require("../config/db_config");
 const { uuid } = require("uuidv4");
 
-const createUser = async (fullName, email, password, profilePicture, about) => {
+const createUser = async (
+  fullName,
+  email,
+  password,
+  profilePicture,
+  about,
+  interests,
+) => {
   try {
     const id = uuid();
     const query = `INSERT INTO User  (id, fullName, email, password,profilePicture,about,createdat,updatedat) VALUES (?, ?, ?, ?,?,?,NOW(),NOW());`;
@@ -13,6 +20,12 @@ const createUser = async (fullName, email, password, profilePicture, about) => {
       profilePicture,
       about,
     ]);
+
+    interests.map(async (res) => {
+      const interestInsertQuery = `INSERT INTO UserInterest (UserId, Interests) VALUES (?, ?);`;
+      await executeQuery(interestInsertQuery, [id, res]);
+    });
+
     return result;
   } catch (err) {
     throw new Error("Error creating user: " + err.message);
@@ -21,7 +34,19 @@ const createUser = async (fullName, email, password, profilePicture, about) => {
 
 const getUser = async () => {
   try {
-    const query = `SELECT fullName, email, password, profilePicture,rating,about,createdat FROM User  WHERE IsDeleted = ?`;
+    const query = `SELECT 
+        u.fullName, 
+        u.email, 
+        u.password, 
+        u.profilePicture, 
+        u.rating, 
+        u.about, 
+        u.createdat,
+        JSON_ARRAYAGG(ui.Interests) AS Interests
+      FROM User u
+      LEFT JOIN UserInterest ui ON u.Id = ui.UserId
+      WHERE u.IsDeleted = ?
+      GROUP BY u.Id;`;
     const result = await executeQuery(query, [false]);
     return result;
   } catch (err) {

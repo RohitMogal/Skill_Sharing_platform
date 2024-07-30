@@ -35,7 +35,7 @@ const Session = sequelize.define(
       allowNull: true,
     },
     Img: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.TEXT,
       allowNull: true,
     },
     Rating: {
