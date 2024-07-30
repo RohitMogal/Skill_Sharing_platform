@@ -49,6 +49,10 @@ const Session = sequelize.define(
             type: DataTypes.DATE,
             allowNull: true,
         },
+        Amount: {
+            type: DataTypes.DECIMAL(7, 2),
+            allowNull: false,
+        },
         CreatedAt: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,

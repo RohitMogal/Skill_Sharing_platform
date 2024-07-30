@@ -42,7 +42,7 @@ const createUserInterest = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -69,7 +69,7 @@ const getUserInterests = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -97,7 +97,7 @@ const getUserInterestById = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -136,7 +136,7 @@ const updateUserInterest = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };
@@ -164,7 +164,7 @@ const deleteUserInterest = async (req, res) => {
     res.status(500).json({
       success: false,
       data: null,
-      message: error.message,
+      message: "Internal Server Error!",
     });
   }
 };

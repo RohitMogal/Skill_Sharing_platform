@@ -1,4 +1,4 @@
-const FeedbackServices = require('../services/feedbackServices');
+const FeedbackServices = require("../services/feedbackServices");
 
 // Function to create new feedback
 const createFeedback = async(req, res) => {

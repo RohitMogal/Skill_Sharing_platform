@@ -84,8 +84,7 @@ const getUser = async(req, res) => {
 
 const getUserById = async(req, res) => {
     try {
-        const { id } = req.params;
-        const result = await userServices.getUserById(id);
+        const result = await userServices.getUserById(req.params.id);
 
         if (result.length > 0) {
             res.status(200).json({

@@ -15,11 +15,13 @@ const loginUser = async (email, password) => {
     const passwordMatch = await bcrypt.compare(password, passwordHash);
 
     if (passwordMatch) {
-      const token = jwt.sign({ email }, SECRET_KEY, { expiresIn: "1h" });
+      const token = jwt.sign({ email: email, id: user[0].id }, SECRET_KEY, {
+        expiresIn: "10h",
+      });
 
-      return token;
+      return { success: true, token: token };
     } else {
-      return false;
+      return { success: false, message: "Invalid credentials" };
     }
   } catch (error) {
     console.error("Error while logging in:", error.message);
@@ -27,17 +29,21 @@ const loginUser = async (email, password) => {
   }
 };
 
-const verifyToken = (token) => {
+const verifyToken = (token, id) => {
   try {
-    console.log("verifyinside");
     const decoded = jwt.verify(token, SECRET_KEY);
-    console.log(decoded);
-    return { success: true };
+    if (decoded.id === id) {
+      return { success: true, message: "User Verified" };
+    } else {
+      return {
+        success: false,
+        message: "Token does not match the provided ID",
+      };
+    }
   } catch (error) {
     return { success: false, message: "Failed to authenticate token" };
   }
 };
-
 module.exports = {
   loginUser,
   verifyToken,

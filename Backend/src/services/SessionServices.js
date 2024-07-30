@@ -6,9 +6,9 @@ const createSession = async(UserId, Description, Title, Link, Img, Interests, Se
         // SQL query to insert a new session record into the 'session' table
         const query = `
             INSERT INTO session
-            (UserId, Description, Title, Link, Img, Interests, SessionTime, CreatedAt) 
+            (UserId, Description, Title, Link, Img, Interests, SessionTime, CreatedAt,Amount) 
             VALUES 
-            (?, ?, ?, ?, ?, ?, ?, NOW());
+            (?, ?, ?, ?, ?, ?, ?, NOW(),?);
         `;
 
         const result = await executeQuery(query, [
