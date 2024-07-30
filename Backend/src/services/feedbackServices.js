@@ -29,7 +29,7 @@ const getFeedback = async() => {
 const getFeedbackBySession = async(Id) => {
     try {
         const query = 'SELECT UserId, SessionId, FeedbackComment FROM feedback WHERE SessionId = ? AND IsDeleted = ?';
-        const result = await executeQuery(query, [Id, false]); // Correctly binding the SessionId and IsDeleted values
+        const result = await executeQuery(query, [Id, false]);
         return result;
     } catch (err) {
         throw new Error("Error fetching Feedback by session ID: " + err.message);
@@ -38,14 +38,15 @@ const getFeedbackBySession = async(Id) => {
 
 
 // Function to update a specific feedback 
-const updateFeedback = async(UserId, SessionId, FeedbackComment) => {
+const updateFeedback = async(id, UserId, SessionId, FeedbackComment) => {
     try {
-        let query = `UPDATE feedback SET UserId, SessionId, FeedbackComment WHERE id=?`;
+        let query = `UPDATE feedback SET UserId=?, SessionId=?, FeedbackComment=? WHERE id=?`;
 
         const result = await executeQuery(query, [
             UserId,
             SessionId,
-            FeedbackComment
+            FeedbackComment,
+            id
         ]);
         return result;
     } catch (err) {
@@ -56,8 +57,8 @@ const updateFeedback = async(UserId, SessionId, FeedbackComment) => {
 // Function to delete (soft delete) a specific feedback
 const deleteFeedback = async(id) => {
     try {
-        const query = 'UPDATE feedback DELETE IsDeleted = true WHERE id = ?';
-        const result = await executeQuery(query, [true, id]);
+        const query = 'UPDATE feedback SET IsDeleted = true WHERE id = ?';
+        const result = await executeQuery(query, [id]);
         return result;
     } catch (err) {
         throw new Error("Error deleting Feedback: " + err.message);

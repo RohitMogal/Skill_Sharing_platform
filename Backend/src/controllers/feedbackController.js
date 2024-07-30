@@ -58,8 +58,8 @@ const getFeedback = async(req, res) => {
 // function to get specific feedback by id
 const getFeedbackBySession = async(req, res) => {
     try {
-        const { Id } = req.params;
-        const result = await FeedbackServices.getFeedbackBySession(Id);
+        const { id } = req.params;
+        const result = await FeedbackServices.getFeedbackBySession(id);
 
         if (result.length > 0) {
             res.status(200).json({

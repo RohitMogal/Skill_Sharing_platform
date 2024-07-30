@@ -39,14 +39,15 @@ const getRatingById = async(id) => {
 };
 
 // Function to update a specific Rating
-const updateRating = async(UserId, SessionId, Rating) => {
+const updateRating = async(id, UserId, SessionId, Rating) => {
     try {
-        let query = `UPDATE rating SET UserId, SessionId, Rating WHERE id=?`;
+        let query = `UPDATE rating SET UserId=?, SessionId=?, Rating=? WHERE id=?`;
 
         const result = await executeQuery(query, [
             UserId,
             SessionId,
-            Rating
+            Rating,
+            id,
         ]);
         return result;
     } catch (err) {
@@ -56,8 +57,8 @@ const updateRating = async(UserId, SessionId, Rating) => {
 
 const deleteRating = async(id) => {
     try {
-        const query = `UPDATE rating DELETE IsDeleted = true WHERE Id = ? `;
-        const result = await executeQuery(query, [true, id]);
+        const query = `UPDATE rating SET IsDeleted = true WHERE Id = ?`;
+        const result = await executeQuery(query, [id]);
         return result;
     } catch (err) {
         throw new Error("Error deleting rating: " + err.message);

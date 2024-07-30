@@ -6,6 +6,7 @@ const interestMasterRoute = require("./src/routes/interestMasterRoute");
 const sessionRoutes = require("./src/routes/sessionRoute");
 const feedbackRoutes = require("./src/routes/feedbackRoutes");
 const ratingRoutes = require("./src/routes/ratingRoutes");
+const paymentRouts = require("./src/routes/paymentRoutes");
 
 const sequelize = require("./src/config/sequelize");
 const User = require("./src/model/userModel");
@@ -14,7 +15,7 @@ const UserInterest = require("./src/model/userInterestModel");
 const Session = require("./src/model/sessionModel");
 const Feedback = require("./src/model/feedbackModel");
 const Rating = require("./src/model/ratingModel");
-
+const Payment = require("./src/model/paymentModel");
 
 const models = {
     User,
@@ -23,6 +24,7 @@ const models = {
     Session,
     Feedback,
     Rating,
+    Payment,
 };
 
 function createTables() {
@@ -54,6 +56,7 @@ app.use("/interestMaster", interestMasterRoute);
 app.use("/session", sessionRoutes);
 app.use("/feedback", feedbackRoutes);
 app.use("/rating", ratingRoutes);
+app.use("/payment", paymentRouts);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
