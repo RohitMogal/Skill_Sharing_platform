@@ -1,29 +1,30 @@
-require("dotenv").config();
 const mysql = require("mysql2/promise");
-
-// Create a MySQL connection pool
+require("dotenv").config();
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+    host: "localhost",
+    user: "root",
+    password: "Aishwarya$1997",
+    database: "Skill_Scheduling",
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
 });
 
-// Function to execute a query with parameters
-const executeQuery = async (query, params) => {
-  let connection;
-  try {
-    connection = await pool.getConnection(); // Get a connection from the pool
-    const [results] = await connection.execute(query, params); // Execute the query with parameters
-    return results; // Return the result
-  } catch (err) {
-    throw new Error("Database query error: " + err.message);
-  } finally {
-    if (connection) connection.release(); // Release the connection back to the pool
-  }
+const executeQuery = async(query, params) => {
+    let connection;
+    try {
+        connection = await pool.getConnection();
+        console.log(query);
+        console.log(params);
+        // process.exit();
+        const [results] = await connection.execute(query, params);
+        return results;
+    } catch (err) {
+        console.error("Database query error:", err.message);
+        throw new Error("Database query error: " + err.message);
+    } finally {
+        if (connection) connection.release();
+    }
 };
 
-module.exports = { executeQuery };
+module.exports = executeQuery;
