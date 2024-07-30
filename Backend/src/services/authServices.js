@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 const helper = require("../helper/helper");
+const executeQuery = require("../config/db_config");
 const bcrypt = require("bcrypt");
+const saltRounds = 10;
 require("dotenv").config();
 const SECRET_KEY = process.env.SECRET_KEY;
 const loginUser = async (email, password) => {
@@ -19,7 +21,7 @@ const loginUser = async (email, password) => {
         expiresIn: "10h",
       });
 
-      return { success: true, token: token };
+      return { success: true, token: token, id: user[0].id };
     } else {
       return { success: false, message: "Invalid credentials" };
     }
@@ -31,8 +33,11 @@ const loginUser = async (email, password) => {
 
 const verifyToken = (token, id) => {
   try {
+    console.log("token");
+    console.log(token);
     const decoded = jwt.verify(token, SECRET_KEY);
-    if (decoded.id === id) {
+    console.log(decoded.id);
+    if (decoded.id == id) {
       return { success: true, message: "User Verified" };
     } else {
       return {
@@ -44,7 +49,23 @@ const verifyToken = (token, id) => {
     return { success: false, message: "Failed to authenticate token" };
   }
 };
+const resetPassword = async (email, changedPassword) => {
+  try {
+    const user = await helper.userExist(email);
+    if (user.length === 0) {
+      return false;
+    }
+
+    const hashPassword = await bcrypt.hash(changedPassword, saltRounds);
+    const query = `UPDATE user SET password=? where email=?`;
+    const result = await executeQuery(query, [hashPassword, email]);
+    return result;
+  } catch (err) {
+    throw new Error("Error updating Password: " + err.message);
+  }
+};
 module.exports = {
   loginUser,
   verifyToken,
+  resetPassword,
 };

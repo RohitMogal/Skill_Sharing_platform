@@ -1,8 +1,7 @@
 const { sendEmail } = require("../helper/email");
 const { google } = require("googleapis");
 
-const { parseISO, format } = require("date-fns");
-const { utcToZonedTime, format: formatTz } = require("date-fns-tz");
+const moment = require("moment");
 
 const interestedEmail = async (
   fullName,
@@ -15,8 +14,11 @@ const interestedEmail = async (
   title,
 ) => {
   // Format the session time
-  const formattedSessionTime = new Date(sessionTime).toLocaleString(); // Adjust formatting as needed
 
+  const inputDate = sessionTime;
+  const convertedDate = moment(inputDate).format("YYYY-MM-DD HH:mm:ss");
+
+  console.log(convertedDate);
   // Email subject and body
   const subject = `Thank You for Your Interest in Our Session!`;
   const text = `
@@ -28,7 +30,7 @@ Thank you for showing interest in our upcoming session! We are excited to have y
 
 Event: ${title}
 
-Date and Time: ${formattedSessionTime}
+Date and Time: ${convertedDate}
 
 Event Link: ${link}
 

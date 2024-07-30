@@ -11,7 +11,8 @@ const userInterestRoute = require("./src/routes/userInterestRoute");
 const ratingRoute = require("./src/routes/ratingRoutes");
 const emailRoute = require("./src/routes/emailRoutes");
 const requestRoute = require("./src/routes/requestRoute");
-const { sendEmail } = require("./src/helper/email");
+const paymentRoute = require("./src/routes/paymentRoutes");
+
 const User = require("./src/model/userModel");
 const InterestMaster = require("./src/model/interestMasterModel");
 const UserInterest = require("./src/model/userInterestModel");
@@ -19,6 +20,7 @@ const Session = require("./src/model/sessionModel");
 const Feedback = require("./src/model/feedbackModel");
 const Rating = require("./src/model/ratingModel");
 const Request = require("./src/model/requestModel");
+const Payment = require("./src/model/paymentModel");
 
 const models = {
   User,
@@ -28,6 +30,7 @@ const models = {
   InterestMaster,
   Rating,
   Request,
+  Payment,
 };
 
 async function createTables() {
@@ -44,7 +47,7 @@ var corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,
 };
-// createTables();
+createTables();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -58,6 +61,7 @@ app.use("/userInterest", userInterestRoute);
 app.use("/rating", ratingRoute);
 app.use("/email", emailRoute);
 app.use("/request", requestRoute);
+app.use("/payment", paymentRoute);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

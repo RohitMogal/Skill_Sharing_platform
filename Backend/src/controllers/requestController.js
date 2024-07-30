@@ -2,6 +2,7 @@ const requestServices = require("../services/requestServices");
 
 const createRequest = async (req, res) => {
   try {
+    console.log(req.body);
     const { UserId, Description, Interest } = req.body;
 
     const result = await requestServices.createRequest(
