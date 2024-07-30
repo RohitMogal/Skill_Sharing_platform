@@ -9,13 +9,16 @@ const authRoutes = require("./src/routes/authRoutes");
 const interestMasterRoute = require("./src/routes/interestMasterRoute");
 const userInterestRoute = require("./src/routes/userInterestRoute");
 const ratingRoute = require("./src/routes/ratingRoutes");
-const { sendEmail } = require("./src/services/email.service");
+const emailRoute = require("./src/routes/emailRoutes");
+const requestRoute = require("./src/routes/requestRoute");
+const { sendEmail } = require("./src/helper/email");
 const User = require("./src/model/userModel");
 const InterestMaster = require("./src/model/interestMasterModel");
 const UserInterest = require("./src/model/userInterestModel");
 const Session = require("./src/model/sessionModel");
 const Feedback = require("./src/model/feedbackModel");
 const Rating = require("./src/model/ratingModel");
+const Request = require("./src/model/requestModel");
 
 const models = {
   User,
@@ -24,6 +27,7 @@ const models = {
   Feedback,
   InterestMaster,
   Rating,
+  Request,
 };
 
 async function createTables() {
@@ -38,30 +42,9 @@ async function createTables() {
 app.use(cors());
 var corsOptions = {
   origin: "*",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  optionsSuccessStatus: 200,
 };
 // createTables();
-
-// //////////////////////////////////////
-
-// const { format } = require("date-fns-tz");
-
-// // Function to format the date and time in UTC for MySQL
-// const formatDateTimeForMySQL = (date) => {
-//   return format(date, "yyyy-MM-dd HH:mm:ss", { timeZone: "UTC" });
-// };
-
-// // Example usage
-// const now = new Date("2074-07-24T07:24:28.000Z");
-// const formattedDateTime = formatDateTimeForMySQL(now);
-// console.log(formattedDateTime); // Output: 2074-07-24 07:24:28
-
-sendEmail(
-  "rohitmogal45@gmail.com",
-  "Welcome Skill Sharing",
-  "Your session time will be arranged soon",
-);
-// /////////////////////////
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -73,6 +56,8 @@ app.use("/auth", authRoutes);
 app.use("/interestMaster", interestMasterRoute);
 app.use("/userInterest", userInterestRoute);
 app.use("/rating", ratingRoute);
+app.use("/email", emailRoute);
+app.use("/request", requestRoute);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

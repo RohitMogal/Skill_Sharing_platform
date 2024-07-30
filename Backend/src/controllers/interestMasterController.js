@@ -75,10 +75,11 @@ const getInterestById = async (req, res) => {
 const updateInterest = async (req, res) => {
   try {
     console.log("update");
-    const { id } = req.params;
-    const { interest } = req.body;
 
-    const result = await interestMasterService.updateInterest(id, interest);
+    const result = await interestMasterService.updateInterest(
+      req.params.id,
+      req.body.interest,
+    );
 
     if (result) {
       res.status(200).json({

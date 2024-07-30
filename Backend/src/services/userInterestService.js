@@ -14,8 +14,8 @@ const createUserInterest = async (userId, interests) => {
 // Get all UserInterests
 const getUserInterests = async () => {
   try {
-    const query = `SELECT * FROM UserInterest WHERE IsDeleted = false`;
-    const result = await executeQuery(query, []);
+    const query = `SELECT Id,UserId, Interests FROM UserInterest WHERE IsDeleted = ?`;
+    const result = await executeQuery(query, [false]);
     return result;
   } catch (err) {
     throw new Error("Error fetching user interests: " + err.message);
@@ -25,7 +25,7 @@ const getUserInterests = async () => {
 // Get UserInterest by ID
 const getUserInterestById = async (id) => {
   try {
-    const query = `SELECT * FROM UserInterest WHERE Id = ? AND IsDeleted = ?`;
+    const query = `SELECT Id ,UserId, Interests FROM UserInterest WHERE Id = ? AND IsDeleted = ?`;
     const result = await executeQuery(query, [id, false]);
     return result;
   } catch (err) {

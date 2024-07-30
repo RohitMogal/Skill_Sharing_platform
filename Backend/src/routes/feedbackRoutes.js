@@ -1,12 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const FeedbackController = require('../controllers/feedbackController');
+const FeedbackController = require("../controllers/feedbackController");
+const verify = require("../controllers/authController");
 
-router.post('/', FeedbackController.creatFeedback);
-router.get('/', FeedbackController.getFeedback);
-router.get('/:session_feedbackId', FeedbackController.getFeedbackBySession);
-router.put('/:id', FeedbackController.updateFeedback);
-router.delete('/:id', FeedbackController.deleteFeedback);
-
+router.post("/", verify.verifyToken, FeedbackController.creatFeedback);
+router.get("/", verify.verifyToken, FeedbackController.getFeedback);
+router.get("/:id", verify.verifyToken, FeedbackController.getFeedbackBySession);
+router.put("/:id", verify.verifyToken, FeedbackController.updateFeedback);
+router.delete("/:id", verify.verifyToken, FeedbackController.deleteFeedback);
 
 module.exports = router;

@@ -8,13 +8,24 @@ const createsession = async (
   Img,
   Interests,
   SessionTime,
+  Amount,
 ) => {
+  console.log(
+    UserId,
+    Description,
+    Title,
+    Link,
+    Img,
+    Interests,
+    SessionTime,
+    Amount,
+  );
   try {
     const query = `
             INSERT INTO session
-            (UserId, Description, Title, Link, Img, Interests, SessionTime, CreatedAt) 
+            (UserId, Description, Title, Link, Img, Interests, SessionTime, CreatedAt,Amount) 
             VALUES 
-            (?, ?, ?, ?, ?, ?, ?, NOW());
+            (?, ?, ?, ?, ?, ?, ?, NOW(),?);
         `;
     const result = await executeQuery(query, [
       UserId,
@@ -24,16 +35,38 @@ const createsession = async (
       Img,
       Interests,
       SessionTime,
+      Amount,
     ]);
     return result;
   } catch (err) {
+    console.log(err.message);
     throw new Error("Error creating session: " + err.message);
+  }
+};
+
+const getfilterSession = async (intrests) => {
+  try {
+    const query = `SELECT UserId, Description, Title, Link, Img, Interests, SessionTime, Amount FROM session WHERE IsDeleted = ?`;
+    const result = await executeQuery(query, [false]);
+    const userInterestArray = JSON.parse(intrests);
+    console.log(userInterestArray);
+
+    const commonElements = result.filter((element) => {
+      const interestsArray = JSON.parse(element.Interests);
+      return interestsArray.some((interest) =>
+        userInterestArray.includes(interest),
+      );
+    });
+
+    return commonElements;
+  } catch (err) {
+    throw new Error("Error fetching sessions: " + err.message);
   }
 };
 
 const getSession = async () => {
   try {
-    const query = `SELECT * FROM session WHERE IsDeleted = ?`;
+    const query = `SELECT UserId, Description, Title, Link, Img, Interests, SessionTime, Amount FROM session WHERE IsDeleted = ?`;
     const result = await executeQuery(query, [false]);
     return result;
   } catch (err) {
@@ -43,7 +76,7 @@ const getSession = async () => {
 
 const getSessionById = async (id) => {
   try {
-    const query = `SELECT * FROM session WHERE SessionId = ? AND IsDeleted = ?`;
+    const query = `SELECT UserId, Description, Title, Link, Img, Interests, SessionTime, Amount FROM session WHERE id = ? AND IsDeleted = ?`;
     const result = await executeQuery(query, [id, false]);
     return result;
   } catch (err) {
@@ -51,20 +84,38 @@ const getSessionById = async (id) => {
   }
 };
 
-const updateSession = async (id, updates) => {
+const updateSession = async (
+  id,
+  UserId,
+  Description,
+  Title,
+  Link,
+  Img,
+  Interests,
+  SessionTime,
+) => {
   try {
-    let query = `UPDATE session SET `;
-    const fields = [];
-    const values = [];
+    const query = `
+      UPDATE session SET 
+      UserId = ?, 
+      Description = ?, 
+      Title = ?, 
+      Link = ?, 
+      Img = ?, 
+      Interests = ?, 
+      SessionTime = ?
+      WHERE id = ?`;
 
-    for (const [key, value] of Object.entries(updates)) {
-      fields.push(`${key} = ?`);
-      values.push(value);
-    }
-
-    query += fields.join(", ") + " WHERE SessionId = ?";
-
-    values.push(id);
+    const values = [
+      UserId,
+      Description,
+      Title,
+      Link,
+      Img,
+      Interests,
+      SessionTime,
+      id,
+    ];
 
     const result = await executeQuery(query, values);
     return result;
@@ -89,4 +140,5 @@ module.exports = {
   getSessionById,
   updateSession,
   deleteSession,
+  getfilterSession,
 };

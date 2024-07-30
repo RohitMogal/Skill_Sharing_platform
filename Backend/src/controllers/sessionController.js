@@ -13,8 +13,16 @@ const SessionServices = require("../services/SessionServices");
 
 const createsession = async (req, res) => {
   try {
-    const { UserId, Description, Title, Link, Img, Interests, SessionTime } =
-      req.body;
+    const {
+      UserId,
+      Description,
+      Title,
+      Link,
+      Img,
+      Interests,
+      SessionTime,
+      Amount,
+    } = req.body;
 
     const result = await SessionServices.createsession(
       UserId,
@@ -24,6 +32,7 @@ const createsession = async (req, res) => {
       Img,
       Interests,
       SessionTime,
+      Amount,
     );
 
     if (result) {
@@ -50,7 +59,35 @@ const createsession = async (req, res) => {
 
 const getSession = async (req, res) => {
   try {
-    const result = await SessionServices.getSession();
+    const result = await SessionServices.getSession(req.body.userInterest);
+
+    if (result.length > 0) {
+      res.status(200).json({
+        success: true,
+        data: result,
+        message: "Success",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        data: null,
+        message: "List retrieval failed",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+const getfilterSession = async (req, res) => {
+  try {
+    const result = await SessionServices.getfilterSession(
+      req.body.userInterest,
+    );
 
     if (result.length > 0) {
       res.status(200).json({
@@ -103,8 +140,19 @@ const getSessionById = async (req, res) => {
 
 const updateSession = async (req, res) => {
   try {
-    const { id } = req.params;
-    const result = await SessionServices.updateSession(id, req.body);
+    const { UserId, Description, Title, Link, Img, Interests, SessionTime } =
+      req.body;
+
+    const result = await SessionServices.updateSession(
+      req.params.id,
+      UserId,
+      Description,
+      Title,
+      Link,
+      Img,
+      Interests,
+      SessionTime,
+    );
 
     if (result) {
       res.status(200).json({
@@ -161,4 +209,5 @@ module.exports = {
   getSessionById,
   updateSession,
   deleteSession,
+  getfilterSession,
 };

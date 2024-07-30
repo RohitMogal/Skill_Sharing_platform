@@ -18,8 +18,8 @@ const createFeedback = async (UserId, SessionId, FeedbackComment) => {
 
 const getFeedback = async () => {
   try {
-    const query = `SELECT * FROM Feedback WHERE IsDeleted = false`;
-    const result = await executeQuery(query, []);
+    const query = `SELECT UserId, SessionId, FeedbackComment FROM Feedback WHERE IsDeleted = ?`;
+    const result = await executeQuery(query, [false]);
     return result;
   } catch (err) {
     throw new Error("Error fetching sessions: " + err.message);
@@ -29,31 +29,21 @@ const getFeedback = async () => {
 const getFeedbackBySession = async (SessionId) => {
   try {
     const query =
-      "SELECT * FROM Feedback WHERE SessionId = ? AND IsDeleted = 0";
-    const result = await executeQuery(query, [SessionId]);
+      "SELECT UserId, SessionId, FeedbackComment FROM Feedback WHERE SessionId = ? AND IsDeleted = ?";
+    const result = await executeQuery(query, [SessionId, false]);
     return result;
   } catch (err) {
     throw new Error("Error fetching Feedback by ID: " + err.message);
   }
 };
 
-const updateFeedback = async (id, updates) => {
+const updateFeedback = async (id, UserId, SessionId, FeedbackComment) => {
   try {
-    let query = `UPDATE Feedback SET `;
-    const fields = [];
-    const values = [];
+    const query = `UPDATE Feedback SET UserId = ?, SessionId = ?, FeedbackComment = ?  WHERE id = ?`;
+    const values = [UserId, SessionId, FeedbackComment, id];
 
-    for (const [key, value] of Object.entries(updates)) {
-      fields.push(`${key} = ?`);
-      values.push(value);
-    }
-
-    query += fields.join(", ") + " WHERE WHERE id = ?";
-
-    values.push(id);
-
-    const [result] = await db.execute(query, values);
-    return result.affectedRows;
+    const result = await executeQuery(query, values);
+    return result;
   } catch (err) {
     throw new Error("Error updating feedback: " + err.message);
   }
@@ -61,8 +51,8 @@ const updateFeedback = async (id, updates) => {
 
 const deleteFeedback = async (id) => {
   try {
-    const query = "UPDATE Feedback SET IsDeleted = 1 WHERE id = ?";
-    const result = await executeQuery(query, [id]);
+    const query = "UPDATE Feedback SET IsDeleted = ? WHERE id = ?";
+    const result = await executeQuery(query, [true, id]);
     return result;
   } catch (err) {
     throw new Error("Error deleting Feedback: " + err.message);

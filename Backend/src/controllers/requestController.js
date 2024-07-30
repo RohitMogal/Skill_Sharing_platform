@@ -1,25 +1,26 @@
-const FeedbackServices = require("../services/feedbackServices");
+const requestServices = require("../services/requestServices");
 
-const creatFeedback = async (req, res) => {
+const createRequest = async (req, res) => {
   try {
-    const { UserId, SessionId, FeedbackComment } = req.body;
+    const { UserId, Description, Interest } = req.body;
 
-    const result = await FeedbackServices.createFeedback(
+    const result = await requestServices.createRequest(
       UserId,
-      SessionId,
-      FeedbackComment,
+      Description,
+      Interest,
     );
+
     if (result) {
       res.status(200).json({
         success: true,
         data: result,
-        message: "Feedback created successfully",
+        message: "Request created successfully",
       });
     } else {
       res.status(400).json({
         success: false,
         data: null,
-        message: "Feedback creation failed",
+        message: "Request creation failed",
       });
     }
   } catch (error) {
@@ -31,9 +32,9 @@ const creatFeedback = async (req, res) => {
   }
 };
 
-const getFeedback = async (req, res) => {
+const getRequest = async (req, res) => {
   try {
-    const result = await FeedbackServices.getFeedback();
+    const result = await requestServices.getRequest(req.body.userInterest);
 
     if (result.length > 0) {
       res.status(200).json({
@@ -57,11 +58,11 @@ const getFeedback = async (req, res) => {
   }
 };
 
-const getFeedbackBySession = async (req, res) => {
+const getFilteredRequest = async (req, res) => {
   try {
-    console.log(req.params);
-    // process.exit();
-    const result = await FeedbackServices.getFeedbackBySession(req.params.id);
+    const result = await requestServices.getFilteredRequest(
+      req.body.userInterest,
+    );
 
     if (result.length > 0) {
       res.status(200).json({
@@ -85,55 +86,82 @@ const getFeedbackBySession = async (req, res) => {
   }
 };
 
-const updateFeedback = async (req, res) => {
-  try {
-    const { UserId, SessionId, FeedbackComment } = req.body;
-
-    const result = await FeedbackServices.updateFeedback(
-      req.params.id,
-      UserId,
-      SessionId,
-      FeedbackComment,
-    );
-
-    if (result) {
-      res.status(200).json({
-        success: true,
-        data: result,
-        message: "Feedback updated successfully",
-      });
-    } else {
-      res.status(400).json({
-        success: false,
-        data: null,
-        message: "Feedback update failed",
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: "Internal Server Error!",
-    });
-  }
-};
-
-const deleteFeedback = async (req, res) => {
+const getRequestById = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await SessionServices.deleteFeedback(id);
+    const result = await requestServices.getRequestById(id);
 
-    if (result) {
+    if (result.length > 0) {
       res.status(200).json({
         success: true,
-        data: null,
-        message: "Feedback deleted successfully",
+        data: result,
+        message: "Success",
       });
     } else {
       res.status(400).json({
         success: false,
         data: null,
-        message: "Feedback deletion failed",
+        message: "Request not found",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+const updateRequest = async (req, res) => {
+  try {
+    const { UserId, Description, Interest } = req.body;
+
+    const result = await requestServices.updateRequest(
+      req.params.id,
+      UserId,
+      Description,
+      Interest,
+    );
+
+    if (result) {
+      res.status(200).json({
+        success: true,
+        data: result,
+        message: "Request updated successfully",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        data: null,
+        message: "Request update failed",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: "Internal Server Error!",
+    });
+  }
+};
+
+const deleteRequest = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await requestServices.deleteRequest(id);
+
+    if (result) {
+      res.status(200).json({
+        success: true,
+        data: null,
+        message: "Request deleted successfully",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        data: null,
+        message: "Request deletion failed",
       });
     }
   } catch (error) {
@@ -146,9 +174,10 @@ const deleteFeedback = async (req, res) => {
 };
 
 module.exports = {
-  creatFeedback,
-  getFeedback,
-  getFeedbackBySession,
-  updateFeedback,
-  deleteFeedback,
+  createRequest,
+  getRequest,
+  getRequestById,
+  updateRequest,
+  deleteRequest,
+  getFilteredRequest,
 };
