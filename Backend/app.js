@@ -47,7 +47,7 @@ var corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,
 };
-createTables();
+// createTables();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -56,7 +56,7 @@ app.use("/user", userRoutes);
 app.use("/session", sessionRoutes);
 app.use("/feedback", feedbackRoutes);
 app.use("/auth", authRoutes);
-app.use("/interestMaster", interestMasterRoute);
+app.use("/interests", interestMasterRoute);
 app.use("/userInterest", userInterestRoute);
 app.use("/rating", ratingRoute);
 app.use("/email", emailRoute);

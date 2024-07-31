@@ -12,7 +12,7 @@ const createInterest = async (Interest) => {
 
 const getInterest = async () => {
   try {
-    const query = `SELECT Interest FROM Interest`;
+    const query = `SELECT id,Interest FROM Interest`;
     const result = await executeQuery(query, []);
     return result;
   } catch (err) {
@@ -22,7 +22,7 @@ const getInterest = async () => {
 
 const getInterestById = async (id) => {
   try {
-    const query = `SELECT Interest FROM Interest WHERE Id = ?;`;
+    const query = `SELECT id,Interest FROM Interest WHERE Id = ?;`;
     const result = await executeQuery(query, [id, false]);
     return result;
   } catch (err) {

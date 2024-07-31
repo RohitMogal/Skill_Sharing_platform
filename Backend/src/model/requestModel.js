@@ -22,7 +22,7 @@ const Request = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    Interest: {
+    Title: {
       type: DataTypes.STRING(255),
       allowNull: true,
     },

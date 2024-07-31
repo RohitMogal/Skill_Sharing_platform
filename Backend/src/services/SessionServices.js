@@ -1,5 +1,6 @@
+const { query } = require("express");
 const executeQuery = require("../config/db_config");
-
+const moment = require("moment");
 const createsession = async (
   UserId,
   Description,
@@ -10,16 +11,12 @@ const createsession = async (
   SessionTime,
   Amount,
 ) => {
-  console.log(
-    UserId,
-    Description,
-    Title,
-    Link,
-    Img,
-    Interests,
-    SessionTime,
-    Amount,
+  console.log(SessionTime);
+  const convertedDate = moment("2024-07-29T18:08:19.000Z").format(
+    "YYYY-MM-DD HH:mm:ss",
   );
+  console.log(convertedDate);
+
   try {
     const query = `
             INSERT INTO session
@@ -34,7 +31,7 @@ const createsession = async (
       Link,
       Img,
       Interests,
-      SessionTime,
+      convertedDate,
       Amount,
     ]);
     return result;
@@ -139,6 +136,36 @@ const deleteSession = async (id) => {
     throw new Error("Error deleting session: " + err.message);
   }
 };
+const myActivity = async (id) => {
+  try {
+    const myActivity = {};
+
+    const mySession = `SELECT 
+        UserId, Description, Title, Link, Img, Interests, SessionTime, Amount
+    FROM session 
+    WHERE UserId = ?`;
+    const mySessionresult = await executeQuery(mySession, [id]);
+    myActivity.sessions = mySessionresult;
+
+    const myRequest = `SELECT 
+        UserId, Description, Title, CreatedAt
+    FROM request 
+    WHERE UserId = ?`;
+    const myRequestresult = await executeQuery(myRequest, [id]);
+    myActivity.requests = myRequestresult;
+
+    const myEnrolment = `SELECT 
+        UserId, SessionId, Amount, OrderId
+    FROM payment 
+    WHERE UserId = ?`;
+    const myEnrolmentresult = await executeQuery(myEnrolment, [id]);
+    myActivity.enrolments = myEnrolmentresult;
+
+    return myActivity;
+  } catch (err) {
+    throw new Error("Error deleting session: " + err.message);
+  }
+};
 
 module.exports = {
   createsession,
@@ -147,4 +174,5 @@ module.exports = {
   updateSession,
   deleteSession,
   getfilterSession,
+  myActivity,
 };

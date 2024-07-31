@@ -19,7 +19,7 @@ const UserInterest = sequelize.define(
       },
     },
     Interests: {
-      type: DataTypes.TEXT,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
     CreatedAt: {

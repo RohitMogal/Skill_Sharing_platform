@@ -114,21 +114,20 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { error } = userValidation.validate(req.body);
-    if (error) {
-      return res.status(400).json({
-        success: false,
-        data: null,
-        message: bodyError.details[0].message,
-      });
-    }
-    const { fullName, email, password, profilePicture, about } = req.body;
-
+    // const { error } = userValidation.validate(req.body);
+    // if (error) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     data: null,
+    //     message: bodyError.details[0].message,
+    //   });
+    // }
+    const { fullName, profilePicture, about } = req.body;
+    console.log(fullName, profilePicture, about);
     const result = await userServices.updateUser(
       req.params.id,
       fullName,
-      email,
-      password,
+
       profilePicture,
       about,
     );

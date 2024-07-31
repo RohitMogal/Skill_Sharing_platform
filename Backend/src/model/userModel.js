@@ -16,7 +16,7 @@ const User = sequelize.define(
     Email: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
+      // unique: true,
     },
     Password: {
       type: DataTypes.STRING(255),
@@ -28,7 +28,7 @@ const User = sequelize.define(
     },
     ProfilePicture: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
     },
     Rating: {
       type: DataTypes.DECIMAL(3, 2),

@@ -13,16 +13,10 @@ const SessionServices = require("../services/SessionServices");
 
 const createsession = async (req, res) => {
   try {
-    const {
-      UserId,
-      Description,
-      Title,
-      Link,
-      Img,
-      Interests,
-      SessionTime,
-      Amount,
-    } = req.body;
+    const UserId = req.headers.id;
+    console.log(UserId);
+    const { Description, Title, Link, Img, Interests, SessionTime, Amount } =
+      req.body;
 
     const result = await SessionServices.createsession(
       UserId,
@@ -202,6 +196,32 @@ const deleteSession = async (req, res) => {
     });
   }
 };
+const myActivity = async (req, res) => {
+  try {
+    const { id } = req.headers;
+    console.log(id);
+    const result = await SessionServices.myActivity(id);
+
+    if (result) {
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        data: null,
+        message: "Retrival failed",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: "Internal Server Error!",
+    });
+  }
+};
 
 module.exports = {
   createsession,
@@ -210,4 +230,5 @@ module.exports = {
   updateSession,
   deleteSession,
   getfilterSession,
+  myActivity,
 };

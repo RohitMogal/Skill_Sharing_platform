@@ -2,12 +2,11 @@ const { sendEmail } = require("../helper/email");
 const { google } = require("googleapis");
 
 const moment = require("moment");
+const executeQuery = require("../config/db_config");
 
 const interestedEmail = async (
   fullName,
   email,
-  userId,
-  sessionId,
   sessionTime,
   link,
   sessionCreator,
@@ -48,6 +47,50 @@ ${sessionCreator}`;
   }
 };
 
+const remidnderEmail = async () => {
+  try {
+    const moment = require("moment");
+    const formattedDate = moment().format("YYYY-MM-DD");
+    const query = `SELECT s.SessionTime, s.Link, s.Title, u.Email AS UserEmail, u2.Email AS CreatorEmail
+FROM session s
+JOIN payment p ON s.Id = p.SessionId
+JOIN user u ON u.Id = p.UserId
+JOIN user u2 ON s.userId = u2.Id
+WHERE CAST(s.SessionTime AS DATE) = ?;
+`;
+    const result = await executeQuery(query, ["2024-07-29"]);
+    console.log(result);
+
+    result.map(async (res) => {
+      const convertedDate = moment(res.sessionTime).format(
+        "YYYY-MM-DD HH:mm:ss",
+      );
+
+      const reminderSubject = `Reminder: Upcoming Session - ${res.Title}`;
+      const reminderText = `
+Dear ${res.fullName},
+
+This is a friendly reminder about the upcoming session that you expressed interest in. We are excited to have you join us!
+
+Event: ${res.Title}
+Date and Time: ${convertedDate}
+Event Link: ${res.Link}
+
+Please make sure to add this event to your calendar so you don’t miss it. We look forward to seeing you there!
+
+Best regards,
+
+${res.CreatorEmail}`;
+
+      await sendEmail(res.UserEmail, reminderSubject, reminderText);
+    });
+
+    return true;
+  } catch (error) {
+    console.error("Error in reminderEmail function:", error);
+    throw error;
+  }
+};
 // Define sendEmail function (or import it if it's defined elsewhere)
 // Ensure it handles sending emails correctly
 
@@ -130,4 +173,5 @@ module.exports = {
   // getToken,
   // createEvent,
   interestedEmail,
+  remidnderEmail,
 };

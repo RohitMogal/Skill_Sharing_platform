@@ -5,23 +5,13 @@ const interestedEmail = async (req, res) => {
   try {
     console.log("Controller: Processing email request");
 
-    const {
-      fullName,
-      email,
-      userId,
-      sessionId,
-      sessionTime,
-      link,
-      sessionCreator,
-      title,
-    } = req.body;
+    const { fullName, email, sessionTime, link, sessionCreator, title } =
+      req.body;
 
     // Call the service function to send email
     const result = await emailServices.interestedEmail(
       fullName,
       email,
-      userId,
-      sessionId,
       sessionTime,
       link,
       sessionCreator,
@@ -37,6 +27,32 @@ const interestedEmail = async (req, res) => {
       res.status(400).json({
         success: false,
         message: "Email sending failed. Please try again later.",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      data: null,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+const remidnderEmail = async (req, res) => {
+  try {
+    console.log("Controller: Processing email request");
+
+    const result = await emailServices.remidnderEmail();
+
+    if (result) {
+      res.status(200).json({
+        success: true,
+        message: "reminder sent successfully",
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "reminder sending failed. Please try again later.",
       });
     }
   } catch (error) {
@@ -79,4 +95,5 @@ module.exports = {
   // googleRedirect,
   // createEvent,
   interestedEmail,
+  remidnderEmail,
 };

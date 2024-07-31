@@ -1,14 +1,14 @@
 const executeQuery = require("../config/db_config");
 
-const createRequest = async (UserId, Description, Interest) => {
+const createRequest = async (UserId, Description, Title) => {
   try {
     const query = `
       INSERT INTO request
-      (UserId, Description, Interest, CreatedAt) 
+      (UserId, Description, Title, CreatedAt) 
       VALUES 
       (?, ?, ?, NOW());
     `;
-    const result = await executeQuery(query, [UserId, Description, Interest]);
+    const result = await executeQuery(query, [UserId, Description, Title]);
     return result;
   } catch (err) {
     throw new Error("Error creating request: " + err.message);
@@ -17,7 +17,7 @@ const createRequest = async (UserId, Description, Interest) => {
 
 const getRequest = async () => {
   try {
-    const query = `SELECT UserId, Description, Interest, CreatedAt FROM request WHERE IsDeleted = ?`;
+    const query = `SELECT UserId, Description, Title, CreatedAt FROM request WHERE IsDeleted = ?`;
     const result = await executeQuery(query, [false]);
     return result;
   } catch (err) {
@@ -25,29 +25,9 @@ const getRequest = async () => {
   }
 };
 
-const getFilteredRequest = async (interests) => {
-  try {
-    const query = `SELECT UserId, Description, Interest, CreatedAt FROM request WHERE IsDeleted = ?`;
-    const result = await executeQuery(query, [false]);
-    const userInterestArray = JSON.parse(interests);
-    console.log(userInterestArray);
-
-    const commonElements = result.filter((element) => {
-      const interestsArray = JSON.parse(element.Interest);
-      return interestsArray.some((interest) =>
-        userInterestArray.includes(interest),
-      );
-    });
-
-    return commonElements;
-  } catch (err) {
-    throw new Error("Error fetching filtered requests: " + err.message);
-  }
-};
-
 const getRequestById = async (id) => {
   try {
-    const query = `SELECT UserId, Description, Interest, CreatedAt FROM request WHERE Id = ? AND IsDeleted = ?`;
+    const query = `SELECT UserId, Description, Title, CreatedAt FROM request WHERE Id = ? AND IsDeleted = ?`;
     const result = await executeQuery(query, [id, false]);
     return result;
   } catch (err) {
@@ -55,16 +35,16 @@ const getRequestById = async (id) => {
   }
 };
 
-const updateRequest = async (id, UserId, Description, Interest) => {
+const updateRequest = async (id, UserId, Description, Title) => {
   try {
     const query = `
       UPDATE request SET 
       UserId = ?, 
       Description = ?, 
-      Interest = ?
+      Title = ?
       WHERE Id = ?`;
 
-    const values = [UserId, Description, Interest, id];
+    const values = [UserId, Description, Title, id];
 
     const result = await executeQuery(query, values);
     return result;
@@ -89,5 +69,4 @@ module.exports = {
   getRequestById,
   updateRequest,
   deleteRequest,
-  getFilteredRequest,
 };

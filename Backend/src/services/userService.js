@@ -34,19 +34,7 @@ const createUser = async (
 
 const getUser = async () => {
   try {
-    const query = `SELECT 
-        u.fullName, 
-        u.email, 
-        u.password, 
-        u.profilePicture, 
-        u.rating, 
-        u.about, 
-        u.createdat,
-        JSON_ARRAYAGG(ui.Interests) AS Interests
-      FROM User u
-      LEFT JOIN UserInterest ui ON u.Id = ui.UserId
-      WHERE u.IsDeleted = ?
-      GROUP BY u.Id;`;
+    const query = `SELECT u.fullName, u.email, u.password, u.profilePicture, u.rating, u.about, u.createdat,JSON_ARRAYAGG(ui.Interests) AS Interests FROM User u LEFT JOIN UserInterest ui ON u.Id = ui.UserId WHERE u.IsDeleted = ? GROUP BY u.Id;`;
     const result = await executeQuery(query, [false]);
     return result;
   } catch (err) {
@@ -72,21 +60,12 @@ const getUserById = async (id) => {
   }
 };
 
-const updateUser = async (
-  id,
-  fullName,
-  email,
-  password,
-  profilePicture,
-  about,
-) => {
-  console.log(id, fullName, email, password, profilePicture, about);
+const updateUser = async (id, fullName, profilePicture, about) => {
+  console.log(id, fullName, profilePicture, about);
   try {
-    let query = `UPDATE User SET fullName=? ,email=? ,password=? ,profilePicture=? ,about=? where id=?`;
+    let query = `UPDATE User SET fullName=? ,profilePicture=? ,about=? where id=?`;
     const result = await executeQuery(query, [
       fullName,
-      email,
-      password,
       profilePicture,
       about,
       id,

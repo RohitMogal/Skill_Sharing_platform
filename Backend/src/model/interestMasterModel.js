@@ -12,7 +12,7 @@ const Interest = sequelize.define(
     Interest: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
+      // unique: true,
     },
     CreatedAt: {
       type: DataTypes.DATE,

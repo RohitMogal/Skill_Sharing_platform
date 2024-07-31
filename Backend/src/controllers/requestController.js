@@ -3,12 +3,12 @@ const requestServices = require("../services/requestServices");
 const createRequest = async (req, res) => {
   try {
     console.log(req.body);
-    const { UserId, Description, Interest } = req.body;
-
+    const { Description, Title } = req.body;
+    console.log(req.headers.id);
     const result = await requestServices.createRequest(
-      UserId,
+      req.headers.id,
       Description,
-      Interest,
+      Title,
     );
 
     if (result) {
@@ -36,34 +36,6 @@ const createRequest = async (req, res) => {
 const getRequest = async (req, res) => {
   try {
     const result = await requestServices.getRequest(req.body.userInterest);
-
-    if (result.length > 0) {
-      res.status(200).json({
-        success: true,
-        data: result,
-        message: "Success",
-      });
-    } else {
-      res.status(400).json({
-        success: false,
-        data: null,
-        message: "List retrieval failed",
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: "Internal Server Error!",
-    });
-  }
-};
-
-const getFilteredRequest = async (req, res) => {
-  try {
-    const result = await requestServices.getFilteredRequest(
-      req.body.userInterest,
-    );
 
     if (result.length > 0) {
       res.status(200).json({
@@ -116,13 +88,13 @@ const getRequestById = async (req, res) => {
 
 const updateRequest = async (req, res) => {
   try {
-    const { UserId, Description, Interest } = req.body;
+    const { UserId, Description, Title } = req.body;
 
     const result = await requestServices.updateRequest(
       req.params.id,
       UserId,
       Description,
-      Interest,
+      Title,
     );
 
     if (result) {
@@ -180,5 +152,4 @@ module.exports = {
   getRequestById,
   updateRequest,
   deleteRequest,
-  getFilteredRequest,
 };
