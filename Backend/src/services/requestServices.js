@@ -17,7 +17,16 @@ const createRequest = async (UserId, Description, Title) => {
 
 const getRequest = async () => {
   try {
-    const query = `SELECT UserId, Description, Title, CreatedAt FROM request WHERE IsDeleted = ?`;
+    const query = `select 
+    r.userid, 
+    r.description, 
+    r.title, 
+    r.createdat, 
+    u.fullname 
+from request r 
+join user u on u.id = r.userid 
+where r.isdeleted = ?;
+`;
     const result = await executeQuery(query, [false]);
     return result;
   } catch (err) {

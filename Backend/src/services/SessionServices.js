@@ -12,9 +12,7 @@ const createsession = async (
   Amount,
 ) => {
   console.log(SessionTime);
-  const convertedDate = moment("2024-07-29T18:08:19.000Z").format(
-    "YYYY-MM-DD HH:mm:ss",
-  );
+  const convertedDate = moment(SessionTime).format("YYYY-MM-DD HH:mm:ss");
   console.log(convertedDate);
 
   try {
@@ -63,7 +61,23 @@ const getfilterSession = async (intrests) => {
 
 const getSession = async () => {
   try {
-    const query = `SELECT UserId, Description, Title, Link, Img, Interests, SessionTime, Amount FROM session WHERE IsDeleted = ?`;
+    const query = `SELECT 
+    s.id,
+    s.UserId, 
+    s.Description, 
+    s.Title, 
+    s.Link, 
+    s.Img, 
+    s.Interests, 
+    s.SessionTime, 
+    s.Amount, 
+    u.fullName,
+    u.profilePicture 
+FROM session s 
+JOIN user u ON u.id = s.UserId  
+WHERE s.IsDeleted = ? AND s.SessionTime > NOW();
+
+`;
     const result = await executeQuery(query, [false]);
     const parsedResult = result.map((session) => {
       return {
@@ -141,26 +155,32 @@ const myActivity = async (id) => {
     const myActivity = {};
 
     const mySession = `SELECT 
-        UserId, Description, Title, Link, Img, Interests, SessionTime, Amount
+        userId, description, title, link, img, interests, sessionTime, amount
     FROM session 
-    WHERE UserId = ?`;
-    const mySessionresult = await executeQuery(mySession, [id]);
+    WHERE UserId = ? and isDeleted=?`;
+    const mySessionresult = await executeQuery(mySession, [id, false]);
     myActivity.sessions = mySessionresult;
 
     const myRequest = `SELECT 
-        UserId, Description, Title, CreatedAt
+        userId, description, title, createdAt
     FROM request 
     WHERE UserId = ?`;
     const myRequestresult = await executeQuery(myRequest, [id]);
     myActivity.requests = myRequestresult;
 
     const myEnrolment = `SELECT 
-        UserId, SessionId, Amount, OrderId
-    FROM payment 
-    WHERE UserId = ?`;
+        p.userId, p.sessionId, p.amount, p.orderId,s.title,s.description
+    FROM payment p join session s on s.id=p.sessionId
+    WHERE p.userId = ?`;
     const myEnrolmentresult = await executeQuery(myEnrolment, [id]);
     myActivity.enrolments = myEnrolmentresult;
 
+    const pastSession = `SELECT 
+        userId, description, title, link, img, interests, sessionTime, amount
+    FROM session 
+    WHERE UserId = ? AND SessionTime < NOW();`;
+    const pastSessionresult = await executeQuery(pastSession, [id]);
+    myActivity.pastsession = pastSessionresult;
     return myActivity;
   } catch (err) {
     throw new Error("Error deleting session: " + err.message);

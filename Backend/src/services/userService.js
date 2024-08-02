@@ -34,8 +34,9 @@ const createUser = async (
 
 const getUser = async () => {
   try {
-    const query = `SELECT u.fullName, u.email, u.password, u.profilePicture, u.rating, u.about, u.createdat,JSON_ARRAYAGG(ui.Interests) AS Interests FROM User u LEFT JOIN UserInterest ui ON u.Id = ui.UserId WHERE u.IsDeleted = ? GROUP BY u.Id;`;
+    const query = `SELECT u.fullName, u.email,  u.profilePicture, u.rating, u.about, u.createdat,JSON_ARRAYAGG(ui.Interests) AS Interests FROM User u LEFT JOIN UserInterest ui ON u.Id = ui.UserId WHERE u.IsDeleted = ? GROUP BY u.Id;`;
     const result = await executeQuery(query, [false]);
+    console.log(result);
     return result;
   } catch (err) {
     throw new Error("Error fetching users: " + err.message);
@@ -44,14 +45,14 @@ const getUser = async () => {
 
 const getUserById = async (id) => {
   try {
-    // const getUserRatingQuery = `SELECT AVG(Rating) AS Rating from session WHERE userid=? Group By UserId `;
-    // const getUserRatingResult = await executeQuery(getUserRatingQuery, [id]);
-    // const updateUserRatingQuery = `UPDATE User SET Rating=? WHERE id=? `;
-    // await executeQuery(updateUserRatingQuery, [
-    //   getUserRatingResult[0].Rating,
-    //   id,
-    // ]);
-    const query = `SELECT fullName, email, password, profilePicture, rating, about FROM User  WHERE Id = ? AND IsDeleted = ?`;
+    const getUserRatingQuery = `SELECT AVG(Rating) AS Rating from session WHERE userid=? Group By UserId `;
+    const getUserRatingResult = await executeQuery(getUserRatingQuery, [id]);
+    const updateUserRatingQuery = `UPDATE User SET Rating=? WHERE id=? `;
+    await executeQuery(updateUserRatingQuery, [
+      getUserRatingResult[0].Rating,
+      id,
+    ]);
+    const query = `SELECT fullName, email,  profilePicture, rating, about FROM User  WHERE Id = ? AND IsDeleted = ?`;
     const result = await executeQuery(query, [id, false]);
 
     return result;

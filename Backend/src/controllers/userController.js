@@ -2,7 +2,7 @@ const userServices = require("../services/userService");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-
+const helper = require("../helper/helper");
 // Validation schemas
 const userValidation = Joi.object({
   fullName: Joi.string().min(1).required(),
@@ -24,11 +24,21 @@ const createUser = async (req, res) => {
       });
     }
 
+    const userExist = await helper.userExist(req.body.email);
+    console.log(userExist);
+    if (userExist.length > 0) {
+      return res.status(409).json({
+        success: false,
+        message: "User already exists",
+      });
+    }
+
     const { fullName, email, password, profilePicture, about, interests } =
       req.body;
 
     const hashPassword = await bcrypt.hash(password, saltRounds);
     console.log(hashPassword);
+
     const result = await userServices.createUser(
       fullName,
       email,

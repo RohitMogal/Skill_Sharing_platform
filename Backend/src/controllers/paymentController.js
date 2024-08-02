@@ -3,13 +3,12 @@ const paymentServices = require("../services/paymentServices");
 //Function to create new Payment
 const createPayment = async (req, res) => {
   try {
-    const { SessionId, Amount, OrderId } = req.body;
+    const { SessionId, amount } = req.body;
 
     const result = await paymentServices.createPayment(
       req.headers.id,
       SessionId,
-      Amount,
-      OrderId,
+      amount,
     );
 
     if (result) {

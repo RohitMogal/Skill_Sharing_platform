@@ -1,6 +1,6 @@
 const executeQuery = require("../config/db_config");
 const moment = require("moment");
-
+const sendemail = require("../services/email.service");
 // Function to create a new Payment
 const createPayment = async (UserId, SessionId, Amount) => {
   try {
@@ -11,14 +11,48 @@ const createPayment = async (UserId, SessionId, Amount) => {
     console.log(OrderId);
     const query = `
             INSERT INTO payment (UserId, SessionId, Amount, OrderId, CreatedAt, IsSuccess) 
-            VALUES (?, ?, ?, ?, NOW(), false)
+            VALUES (?, ?, ?, ?, NOW(),?)
         `;
+
     const result = await executeQuery(query, [
       UserId,
       SessionId,
       Amount,
       OrderId,
+      false,
     ]);
+    console.log(!(result.affectedRows > 1));
+    if (!(result.affectedRows > 1)) {
+      const mailquery = `select 
+      u1.fullname as sessioncreator, 
+      s.description, 
+      s.title, 
+      s.link,  
+      s.sessiontime, 
+      s.amount, 
+      u2.fullname, 
+      u2.email 
+  from session s 
+  join user u1 on u1.id = s.userid  
+  join user u2 on u2.id = ?        
+  where s.id = ?;`;
+      const mailQueryResult = await executeQuery(mailquery, [
+        UserId,
+        SessionId,
+      ]);
+      const { fullname, email, sessiontime, link, sessioncreator, title } =
+        mailQueryResult[0];
+      console.log(mailQueryResult);
+      await sendemail.interestedEmail(
+        fullname,
+        email,
+        sessiontime,
+        link,
+        sessioncreator,
+        title,
+      );
+    }
+
     return result;
   } catch (err) {
     throw new Error("Error creating Payment: " + err.message);

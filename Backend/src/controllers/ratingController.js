@@ -2,16 +2,17 @@ const ratingServices = require("../services/ratingServices");
 
 const sessionRating = async (req, res) => {
   try {
-    const { UserId } = req.body;
+    const UserId = req.headers.id;
+
     const ifRatingExist = await ratingServices.ifExist(UserId);
 
     let message = "";
     if (ifRatingExist.length > 0) {
-      const { UserId, Rating } = req.body;
+      const { Rating } = req.body;
       await ratingServices.updateRating(UserId, Rating);
       message = "Rating updated successfully!";
     } else {
-      const { UserId, SessionId, Rating } = req.body;
+      const { SessionId, Rating } = req.body;
       await ratingServices.createRating(UserId, SessionId, Rating);
       message = "Rating added successfully!";
     }

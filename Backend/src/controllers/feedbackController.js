@@ -1,14 +1,18 @@
 const FeedbackServices = require("../services/feedbackServices");
-
+const ratingServices = require("../services/ratingServices");
 const creatFeedback = async (req, res) => {
   try {
-    const { UserId, SessionId, FeedbackComment } = req.body;
+    const { SessionId, FeedbackComment, Rating } = req.body;
 
     const result = await FeedbackServices.createFeedback(
-      UserId,
+      req.headers.id,
       SessionId,
       FeedbackComment,
     );
+
+    await ratingServices.createRating(req.headers.id, SessionId, Rating);
+    await ratingServices.sessionRatingAvg(SessionId);
+
     if (result) {
       res.status(200).json({
         success: true,

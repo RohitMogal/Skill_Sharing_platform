@@ -49,16 +49,17 @@ ${sessionCreator}`;
 
 const remidnderEmail = async () => {
   try {
+    console.log("email");
     const moment = require("moment");
     const formattedDate = moment().format("YYYY-MM-DD");
-    const query = `SELECT s.SessionTime, s.Link, s.Title, u.Email AS UserEmail, u2.Email AS CreatorEmail
+    const query = `SELECT s.SessionTime, s.Link, s.Title, u.Email AS UserEmail, u.FullName  AS UserFullName,u2.FullName as CreatorFullName
 FROM session s
 JOIN payment p ON s.Id = p.SessionId
 JOIN user u ON u.Id = p.UserId
-JOIN user u2 ON s.userId = u2.Id
+JOIN user u2 ON s.UserId = u2.Id
 WHERE CAST(s.SessionTime AS DATE) = ?;
 `;
-    const result = await executeQuery(query, ["2024-07-29"]);
+    const result = await executeQuery(query, [formattedDate]);
     console.log(result);
 
     result.map(async (res) => {
@@ -68,7 +69,7 @@ WHERE CAST(s.SessionTime AS DATE) = ?;
 
       const reminderSubject = `Reminder: Upcoming Session - ${res.Title}`;
       const reminderText = `
-Dear ${res.fullName},
+Dear ${res.UserFullName},
 
 This is a friendly reminder about the upcoming session that you expressed interest in. We are excited to have you join us!
 
@@ -80,7 +81,7 @@ Please make sure to add this event to your calendar so you don’t miss it. We l
 
 Best regards,
 
-${res.CreatorEmail}`;
+${res.CreatorFullName}`;
 
       await sendEmail(res.UserEmail, reminderSubject, reminderText);
     });
