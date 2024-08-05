@@ -32,7 +32,7 @@ const createPayment = async (req, res) => {
     });
   }
 };
-// Function to fet all Paymnets
+//Retrieves all payments.
 const getPayment = async (req, res) => {
   try {
     const result = await paymentServices.getPayment();
@@ -59,7 +59,7 @@ const getPayment = async (req, res) => {
   }
 };
 
-//Get specific rating paymnet by id
+//Get specific rating payment by id
 const getPaymentById = async (req, res) => {
   try {
     const { id } = req.params;

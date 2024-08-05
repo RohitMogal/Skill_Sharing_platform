@@ -1,5 +1,6 @@
 const FeedbackServices = require("../services/feedbackServices");
 const ratingServices = require("../services/ratingServices");
+//Creates a new feedback.
 const creatFeedback = async (req, res) => {
   try {
     const { SessionId, FeedbackComment, Rating } = req.body;
@@ -34,7 +35,7 @@ const creatFeedback = async (req, res) => {
     });
   }
 };
-
+//Retrieves all feedback.
 const getFeedback = async (req, res) => {
   try {
     const result = await FeedbackServices.getFeedback();
@@ -60,7 +61,7 @@ const getFeedback = async (req, res) => {
     });
   }
 };
-
+//Retrieves feedback by session ID.
 const getFeedbackBySession = async (req, res) => {
   try {
     console.log(req.params);
@@ -88,7 +89,7 @@ const getFeedbackBySession = async (req, res) => {
     });
   }
 };
-
+//Updates an existing feedback entry
 const updateFeedback = async (req, res) => {
   try {
     const { UserId, SessionId, FeedbackComment } = req.body;
@@ -121,7 +122,7 @@ const updateFeedback = async (req, res) => {
     });
   }
 };
-
+//Deletes a feedback entry.
 const deleteFeedback = async (req, res) => {
   try {
     const { id } = req.params;

@@ -6,7 +6,6 @@ const userExist = async (email) => {
     const result = await executeQuery(query, [email]);
     return result;
   } catch (error) {
-    console.error("Error executing query:", error.message);
     throw new Error("Database query failed");
   }
 };

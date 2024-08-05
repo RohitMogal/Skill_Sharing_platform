@@ -1,14 +1,6 @@
 const mysql = require("mysql2/promise");
 require("dotenv").config();
-// const pool = mysql.createPool({
-//   host: "localhost",
-//   user: "root",
-//   password: "Pass@123",
-//   database: "Skill_Sharing",
-//   waitForConnections: true,
-//   connectionLimit: 10,
-//   queueLimit: 0,
-// });
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -18,6 +10,7 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
 });
+//Executes a MySQL query using a connection pool.
 const executeQuery = async (query, params) => {
   let connection;
   try {

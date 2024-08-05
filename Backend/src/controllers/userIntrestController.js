@@ -6,7 +6,7 @@ const userInterestValidation = Joi.object({
   interests: Joi.string().required(),
 });
 
-// Create UserInterest
+//Create UserInterest
 const createUserInterest = async (req, res) => {
   try {
     const { error } = userInterestValidation.validate(req.body);
@@ -47,7 +47,7 @@ const createUserInterest = async (req, res) => {
   }
 };
 
-// Get all UserInterests
+//Get all UserInterests
 const getUserInterests = async (req, res) => {
   try {
     const result = await userInterestServices.getUserInterests();
@@ -74,7 +74,7 @@ const getUserInterests = async (req, res) => {
   }
 };
 
-// Get UserInterest by ID
+//Get UserInterest by ID
 const getUserInterestById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -102,7 +102,7 @@ const getUserInterestById = async (req, res) => {
   }
 };
 
-// Update UserInterest
+//Update UserInterest
 const updateUserInterest = async (req, res) => {
   try {
     const { error } = userInterestValidation.validate(req.body);
@@ -141,7 +141,7 @@ const updateUserInterest = async (req, res) => {
   }
 };
 
-// Delete UserInterest
+//Delete UserInterest
 const deleteUserInterest = async (req, res) => {
   try {
     const { id } = req.params;

@@ -5,7 +5,7 @@ const sequelize = require("./src/config/sequelize");
 const cors = require("cors");
 const reminder = require("./src/services/email.service");
 const bodyParser = require("body-parser");
-
+const cronReminder = require("./src/helper/cron");
 // Import your routes
 const userRoutes = require("./src/routes/userRoutes");
 const sessionRoutes = require("./src/routes/sessionRoute");
@@ -43,10 +43,7 @@ const models = {
 async function createTables() {
   try {
     await sequelize.sync({ alter: true });
-    console.log("Database & tables created!");
-  } catch (error) {
-    console.error("Unable to create tables:", error);
-  }
+  } catch (error) {}
 }
 
 app.use(cors());
@@ -73,14 +70,8 @@ app.use("/email", emailRoute);
 app.use("/request", requestRoute);
 app.use("/payment", paymentRoute);
 
-// Add a cron job to run every minute
-// cron.schedule("* * * * *", () => {
-//   reminder.remidnderEmail();
-//   console.log("Running a task every minute");
-//   // Add your task logic here
-// });
+//To run cron to send notification
+cronReminder();
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+app.listen(port, () => {});

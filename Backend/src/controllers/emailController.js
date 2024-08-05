@@ -1,13 +1,11 @@
 const emailServices = require("../services/email.service");
 const calendarService = require("../services/email.service");
-
+//Send an interested email
 const interestedEmail = async (req, res) => {
   try {
     console.log("Controller: Processing email request");
-
     const { fullName, email, sessionTime, link, sessionCreator, title } =
       req.body;
-
     // Call the service function to send email
     const result = await emailServices.interestedEmail(
       fullName,
@@ -17,7 +15,6 @@ const interestedEmail = async (req, res) => {
       sessionCreator,
       title,
     );
-
     if (result) {
       res.status(200).json({
         success: true,
@@ -37,7 +34,7 @@ const interestedEmail = async (req, res) => {
     });
   }
 };
-
+//Send a reminder email
 const remidnderEmail = async (req, res) => {
   try {
     console.log("Controller: Processing email request");

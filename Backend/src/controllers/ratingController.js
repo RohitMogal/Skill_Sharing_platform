@@ -1,5 +1,5 @@
 const ratingServices = require("../services/ratingServices");
-
+//Rates a session and updates the rating if it already exists or creates a new rating if it doesn't.
 const sessionRating = async (req, res) => {
   try {
     const UserId = req.headers.id;
@@ -32,7 +32,7 @@ const sessionRating = async (req, res) => {
     });
   }
 };
-
+//get a list of all ratings.
 const getRating = async (req, res) => {
   try {
     const result = await ratingServices.getRating();
@@ -58,7 +58,7 @@ const getRating = async (req, res) => {
     });
   }
 };
-
+//Get Rating by ID
 const getRatingById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -85,7 +85,7 @@ const getRatingById = async (req, res) => {
     });
   }
 };
-
+//Deletes a rating by its ID.
 const deleteRating = async (req, res) => {
   try {
     const { id } = req.params;
