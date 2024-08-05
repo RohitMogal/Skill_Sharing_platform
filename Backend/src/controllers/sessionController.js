@@ -1,16 +1,5 @@
 const SessionServices = require("../services/SessionServices");
-// const { format } = require('date-fns');
-
-// // Function to format the date and time
-// const formatDateTimeForMySQL = (date) => {
-//   return format(date, 'yyyy-MM-dd HH:mm:ss');
-// };
-
-// // Example usage
-// const now = new Date();
-// const formattedDateTime = formatDateTimeForMySQL(now);
-// console.log(formattedDateTime);
-
+//Creates a new session.
 const createsession = async (req, res) => {
   try {
     const UserId = req.headers.id;
@@ -50,7 +39,7 @@ const createsession = async (req, res) => {
     });
   }
 };
-
+//Retrieves sessions based on user interests.
 const getSession = async (req, res) => {
   try {
     const result = await SessionServices.getSession(req.body.userInterest);
@@ -76,7 +65,7 @@ const getSession = async (req, res) => {
     });
   }
 };
-
+//Retrieves filtered sessions based on user interests.
 const getfilterSession = async (req, res) => {
   try {
     const result = await SessionServices.getfilterSession(
@@ -104,7 +93,7 @@ const getfilterSession = async (req, res) => {
     });
   }
 };
-
+//Retrieves a specific session by its ID.
 const getSessionById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -131,7 +120,7 @@ const getSessionById = async (req, res) => {
     });
   }
 };
-
+//Updates an existing session.
 const updateSession = async (req, res) => {
   try {
     const { UserId, Description, Title, Link, Img, Interests, SessionTime } =
@@ -169,7 +158,7 @@ const updateSession = async (req, res) => {
     });
   }
 };
-
+// Deletes a session by its ID.
 const deleteSession = async (req, res) => {
   try {
     const { id } = req.params;
@@ -196,6 +185,7 @@ const deleteSession = async (req, res) => {
     });
   }
 };
+//Retrieves sessions related to the logged-in user's activity.
 const myActivity = async (req, res) => {
   try {
     const { id } = req.headers;

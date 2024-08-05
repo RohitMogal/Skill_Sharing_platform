@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 require("dotenv").config();
 const SECRET_KEY = process.env.SECRET_KEY;
+
+// Function to handle user login
 const loginUser = async (email, password) => {
   try {
     const user = await helper.userExist(email);
@@ -26,17 +28,15 @@ const loginUser = async (email, password) => {
       return { success: false, message: "Invalid credentials" };
     }
   } catch (error) {
-    console.error("Error while logging in:", error.message);
     throw new Error("Error while logging in");
   }
 };
 
+// Function to verify the JWT token
 const verifyToken = (token, id) => {
   try {
-    console.log("token");
-    console.log(token);
     const decoded = jwt.verify(token, SECRET_KEY);
-    console.log(decoded.id);
+
     if (decoded.id == id) {
       return { success: true, message: "User Verified" };
     } else {
@@ -49,6 +49,8 @@ const verifyToken = (token, id) => {
     return { success: false, message: "Failed to authenticate token" };
   }
 };
+
+// Function to reset user password
 const resetPassword = async (email, changedPassword) => {
   try {
     const user = await helper.userExist(email);
@@ -64,6 +66,7 @@ const resetPassword = async (email, changedPassword) => {
     throw new Error("Error updating Password: " + err.message);
   }
 };
+
 module.exports = {
   loginUser,
   verifyToken,

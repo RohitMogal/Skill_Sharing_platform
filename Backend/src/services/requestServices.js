@@ -1,5 +1,6 @@
 const executeQuery = require("../config/db_config");
 
+// Function to create a new request
 const createRequest = async (UserId, Description, Title) => {
   try {
     const query = `
@@ -15,18 +16,19 @@ const createRequest = async (UserId, Description, Title) => {
   }
 };
 
+// Function to retrieve all requests with user details
 const getRequest = async () => {
   try {
-    const query = `select 
-    r.userid, 
-    r.description, 
-    r.title, 
-    r.createdat, 
-    u.fullname 
-from request r 
-join user u on u.id = r.userid 
-where r.isdeleted = ?;
-`;
+    const query = `SELECT 
+      r.userid, 
+      r.description, 
+      r.title, 
+      r.createdat, 
+      u.fullname 
+    FROM request r 
+    JOIN user u ON u.id = r.userid 
+    WHERE r.isdeleted = ?;
+    `;
     const result = await executeQuery(query, [false]);
     return result;
   } catch (err) {
@@ -34,6 +36,7 @@ where r.isdeleted = ?;
   }
 };
 
+// Function to retrieve a specific request by its ID
 const getRequestById = async (id) => {
   try {
     const query = `SELECT UserId, Description, Title, CreatedAt FROM request WHERE Id = ? AND IsDeleted = ?`;
@@ -44,6 +47,7 @@ const getRequestById = async (id) => {
   }
 };
 
+// Function to update an existing request
 const updateRequest = async (id, UserId, Description, Title) => {
   try {
     const query = `
@@ -62,6 +66,7 @@ const updateRequest = async (id, UserId, Description, Title) => {
   }
 };
 
+// Function to delete (soft delete) a request by its ID
 const deleteRequest = async (id) => {
   try {
     const query = `UPDATE request SET IsDeleted = ? WHERE Id = ?`;

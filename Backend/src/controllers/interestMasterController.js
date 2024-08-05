@@ -1,4 +1,5 @@
 const interestMasterService = require("../services/interestMasterService");
+//Creates a new interest.
 const createInterest = async (req, res) => {
   try {
     const { interest } = req.body;
@@ -17,7 +18,7 @@ const createInterest = async (req, res) => {
     });
   }
 };
-
+//Retrieves all interests.
 const getInterest = async (req, res) => {
   try {
     const result = await interestMasterService.getInterest();
@@ -43,7 +44,7 @@ const getInterest = async (req, res) => {
     });
   }
 };
-
+//Retrieves an interest by ID.
 const getInterestById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -71,7 +72,7 @@ const getInterestById = async (req, res) => {
     });
   }
 };
-
+//Updates an interest.
 const updateInterest = async (req, res) => {
   try {
     console.log("update");
@@ -102,7 +103,7 @@ const updateInterest = async (req, res) => {
     });
   }
 };
-
+// Function to handle the deletion of an interest
 const deleteInterest = async (req, res) => {
   try {
     const { id } = req.params;

@@ -1,5 +1,5 @@
 const requestServices = require("../services/requestServices");
-
+//Creates a new request.
 const createRequest = async (req, res) => {
   try {
     console.log(req.body);
@@ -32,7 +32,7 @@ const createRequest = async (req, res) => {
     });
   }
 };
-
+//Get a list of requests based on user interest.
 const getRequest = async (req, res) => {
   try {
     const result = await requestServices.getRequest(req.body.userInterest);
@@ -58,7 +58,7 @@ const getRequest = async (req, res) => {
     });
   }
 };
-
+//Get a request by ID.
 const getRequestById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -85,7 +85,7 @@ const getRequestById = async (req, res) => {
     });
   }
 };
-
+//Updates a request.
 const updateRequest = async (req, res) => {
   try {
     const { UserId, Description, Title } = req.body;
@@ -118,7 +118,7 @@ const updateRequest = async (req, res) => {
     });
   }
 };
-
+//Delete Request
 const deleteRequest = async (req, res) => {
   try {
     const { id } = req.params;

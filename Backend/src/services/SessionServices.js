@@ -1,6 +1,7 @@
-const { query } = require("express");
 const executeQuery = require("../config/db_config");
 const moment = require("moment");
+
+// Function to create a new session
 const createsession = async (
   UserId,
   Description,
@@ -11,16 +12,14 @@ const createsession = async (
   SessionTime,
   Amount,
 ) => {
-  console.log(SessionTime);
   const convertedDate = moment(SessionTime).format("YYYY-MM-DD HH:mm:ss");
-  console.log(convertedDate);
 
   try {
     const query = `
             INSERT INTO session
-            (UserId, Description, Title, Link, Img, Interests, SessionTime, CreatedAt,Amount) 
+            (UserId, Description, Title, Link, Img, Interests, SessionTime, CreatedAt, Amount) 
             VALUES 
-            (?, ?, ?, ?, ?, ?, ?, NOW(),?);
+            (?, ?, ?, ?, ?, ?, ?, NOW(), ?);
         `;
     const result = await executeQuery(query, [
       UserId,
@@ -34,17 +33,16 @@ const createsession = async (
     ]);
     return result;
   } catch (err) {
-    console.log(err.message);
     throw new Error("Error creating session: " + err.message);
   }
 };
 
+// Function to get sessions filtered by user interests
 const getfilterSession = async (intrests) => {
   try {
     const query = `SELECT UserId, Description, Title, Link, Img, Interests, SessionTime, Amount FROM session WHERE IsDeleted = ?`;
     const result = await executeQuery(query, [false]);
     const userInterestArray = JSON.parse(intrests);
-    console.log(userInterestArray);
 
     const commonElements = result.filter((element) => {
       const interestsArray = JSON.parse(element.Interests);
@@ -59,6 +57,7 @@ const getfilterSession = async (intrests) => {
   }
 };
 
+// Function to get all active sessions along with user details
 const getSession = async () => {
   try {
     const query = `SELECT 
@@ -91,6 +90,7 @@ WHERE s.IsDeleted = ? AND s.SessionTime > NOW();
   }
 };
 
+// Function to get a specific session by ID
 const getSessionById = async (id) => {
   try {
     const query = `SELECT UserId, Description, Title, Link, Img, Interests, SessionTime, Amount FROM session WHERE id = ? AND IsDeleted = ?`;
@@ -101,6 +101,7 @@ const getSessionById = async (id) => {
   }
 };
 
+// Function to update an existing session
 const updateSession = async (
   id,
   UserId,
@@ -141,6 +142,7 @@ const updateSession = async (
   }
 };
 
+// Function to delete (soft delete) a session by ID
 const deleteSession = async (id) => {
   try {
     const query = `UPDATE session SET IsDeleted = ? WHERE SessionId = ? `;
@@ -150,6 +152,8 @@ const deleteSession = async (id) => {
     throw new Error("Error deleting session: " + err.message);
   }
 };
+
+// Function to retrieve user's activity, including their sessions, requests, enrolments, and past sessions
 const myActivity = async (id) => {
   try {
     const myActivity = {};
@@ -183,7 +187,7 @@ const myActivity = async (id) => {
     myActivity.pastsession = pastSessionresult;
     return myActivity;
   } catch (err) {
-    throw new Error("Error deleting session: " + err.message);
+    throw new Error("Error retrieving activity: " + err.message);
   }
 };
 

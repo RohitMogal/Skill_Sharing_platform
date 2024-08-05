@@ -1,5 +1,6 @@
 const executeQuery = require("../config/db_config");
 
+// Function to create feedback for a session
 const createFeedback = async (UserId, SessionId, FeedbackComment) => {
   try {
     const query =
@@ -16,6 +17,7 @@ const createFeedback = async (UserId, SessionId, FeedbackComment) => {
   }
 };
 
+// Function to get all feedback that is not deleted
 const getFeedback = async () => {
   try {
     const query = `SELECT UserId, SessionId, FeedbackComment FROM Feedback WHERE IsDeleted = ?`;
@@ -26,6 +28,7 @@ const getFeedback = async () => {
   }
 };
 
+// Function to get feedback for a specific session
 const getFeedbackBySession = async (SessionId) => {
   try {
     const query =
@@ -37,9 +40,10 @@ const getFeedbackBySession = async (SessionId) => {
   }
 };
 
+// Function to update feedback details
 const updateFeedback = async (id, UserId, SessionId, FeedbackComment) => {
   try {
-    const query = `UPDATE Feedback SET UserId = ?, SessionId = ?, FeedbackComment = ?  WHERE id = ?`;
+    const query = `UPDATE Feedback SET UserId = ?, SessionId = ?, FeedbackComment = ? WHERE id = ?`;
     const values = [UserId, SessionId, FeedbackComment, id];
 
     const result = await executeQuery(query, values);
@@ -49,6 +53,7 @@ const updateFeedback = async (id, UserId, SessionId, FeedbackComment) => {
   }
 };
 
+// Function to soft delete feedback by setting IsDeleted to true
 const deleteFeedback = async (id) => {
   try {
     const query = "UPDATE Feedback SET IsDeleted = ? WHERE id = ?";

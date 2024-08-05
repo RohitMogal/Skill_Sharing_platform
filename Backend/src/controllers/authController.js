@@ -1,5 +1,5 @@
 const authService = require("../services/authServices");
-
+//Logs in a user with the provided email and password.
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -23,7 +23,7 @@ const login = async (req, res) => {
       .json({ success: false, message: "Internal server error" });
   }
 };
-
+//Verifies a token and calls the next middleware if valid.
 const verifyToken = (req, res, next) => {
   try {
     let token = req.headers["authorization"];
@@ -48,7 +48,7 @@ const verifyToken = (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
+//Resets a user's password.
 const resetPassword = async (req, res) => {
   try {
     const { email, changedPassword } = req.body;

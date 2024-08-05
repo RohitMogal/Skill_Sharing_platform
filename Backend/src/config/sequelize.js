@@ -1,5 +1,7 @@
+//Establishes a connection to a database using Sequelize.
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
+//Creates a new Sequelize instance.
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -10,7 +12,7 @@ const sequelize = new Sequelize(
     logging: false,
   },
 );
-
+//Tests the connection to the database.
 async function testConnection() {
   try {
     await sequelize.authenticate();

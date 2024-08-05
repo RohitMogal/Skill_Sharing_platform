@@ -12,7 +12,7 @@ const userValidation = Joi.object({
   about: Joi.string().required(),
   interests: Joi.array().required(),
 });
-
+//Creates a new user.
 const createUser = async (req, res) => {
   try {
     const { error } = userValidation.validate(req.body);
@@ -69,7 +69,7 @@ const createUser = async (req, res) => {
     });
   }
 };
-
+//Retrieves all users.
 const getUser = async (req, res) => {
   try {
     const result = await userServices.getUser();
@@ -95,7 +95,7 @@ const getUser = async (req, res) => {
     });
   }
 };
-
+//Retrieves a user by their ID
 const getUserById = async (req, res) => {
   try {
     const result = await userServices.getUserById(req.params.id);
@@ -121,17 +121,9 @@ const getUserById = async (req, res) => {
     });
   }
 };
-
+//Retrieves a user by their ID
 const updateUser = async (req, res) => {
   try {
-    // const { error } = userValidation.validate(req.body);
-    // if (error) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     data: null,
-    //     message: bodyError.details[0].message,
-    //   });
-    // }
     const { fullName, profilePicture, about } = req.body;
     console.log(fullName, profilePicture, about);
     const result = await userServices.updateUser(
@@ -163,7 +155,7 @@ const updateUser = async (req, res) => {
     });
   }
 };
-
+//Updates a user's details
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;

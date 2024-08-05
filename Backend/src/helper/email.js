@@ -10,8 +10,6 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = (email, subject, text) => {
-  console.log("Preparing to send email");
-
   const mailOptions = {
     from: "rohitmogal445@gmail.com",
     to: email,
@@ -22,10 +20,9 @@ const sendEmail = (email, subject, text) => {
   return new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.error("Email sending error:", error);
         return reject(error);
       }
-      console.log("Email sent:", info.response);
+
       resolve(info);
     });
   });

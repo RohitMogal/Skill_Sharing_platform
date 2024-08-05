@@ -1,5 +1,6 @@
 const executeQuery = require("../config/db_config");
 
+// Function to create multiple interests and insert them into the database
 const createInterest = async (Interest) => {
   try {
     const interests = [
@@ -134,17 +135,16 @@ const createInterest = async (Interest) => {
       const query = `INSERT INTO Interest (Interest,CreatedAt) VALUES (?,NOW());`;
       const result = await executeQuery(query, [res]);
     });
-    // const query = `INSERT INTO Interest (Interest,CreatedAt) VALUES (?,NOW());`;
-    // const result = await executeQuery(query, [Interest]);
     return result;
   } catch (err) {
     throw new Error("Error creating interest: " + err.message);
   }
 };
 
+// Function to retrieve all interests from the database
 const getInterest = async () => {
   try {
-    const query = `SELECT id,Interest FROM Interest`;
+    const query = `SELECT id, Interest FROM Interest`;
     const result = await executeQuery(query, []);
     return result;
   } catch (err) {
@@ -152,30 +152,33 @@ const getInterest = async () => {
   }
 };
 
+// Function to retrieve a specific interest by its ID
 const getInterestById = async (id) => {
   try {
-    const query = `SELECT id,Interest FROM Interest WHERE Id = ?;`;
-    const result = await executeQuery(query, [id, false]);
+    const query = `SELECT id, Interest FROM Interest WHERE Id = ?;`;
+    const result = await executeQuery(query, [id]);
     return result;
   } catch (err) {
     throw new Error("Error retrieving interest: " + err.message);
   }
 };
 
+// Function to update an existing interest by its ID
 const updateInterest = async (id, Interest) => {
   try {
     const query = `UPDATE Interest SET Interest = ? WHERE Id = ? ;`;
-    const result = await executeQuery(query, [Interest, id, false]);
-    console.log(result);
+    const result = await executeQuery(query, [Interest, id]);
+
     return result;
   } catch (err) {
     throw new Error("Error updating interest: " + err.message);
   }
 };
 
+// Function to delete (soft delete) an interest by its ID
 const deleteInterest = async (id) => {
   try {
-    const query = `UPDATE Interest SET WHERE Id = ?;`;
+    const query = `UPDATE Interest SET IsDeleted = ? WHERE Id = ?;`;
     const result = await executeQuery(query, [true, id]);
     return result;
   } catch (err) {
