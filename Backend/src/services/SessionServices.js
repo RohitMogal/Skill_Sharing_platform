@@ -180,7 +180,7 @@ const myActivity = async (id) => {
     myActivity.enrolments = myEnrolmentresult;
 
     const pastSession = `SELECT 
-        userId, description, title, link, img, interests, sessionTime, amount
+        id,userId, description, title, link, img, interests, sessionTime, amount
     FROM session 
     WHERE UserId = ? AND SessionTime < NOW();`;
     const pastSessionresult = await executeQuery(pastSession, [id]);

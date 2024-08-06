@@ -2,9 +2,7 @@ const requestServices = require("../services/requestServices");
 //Creates a new request.
 const createRequest = async (req, res) => {
   try {
-    console.log(req.body);
     const { Description, Title } = req.body;
-    console.log(req.headers.id);
     const result = await requestServices.createRequest(
       req.headers.id,
       Description,

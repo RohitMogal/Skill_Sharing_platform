@@ -25,7 +25,6 @@ const createUser = async (req, res) => {
     }
 
     const userExist = await helper.userExist(req.body.email);
-    console.log(userExist);
     if (userExist.length > 0) {
       return res.status(409).json({
         success: false,
@@ -37,8 +36,6 @@ const createUser = async (req, res) => {
       req.body;
 
     const hashPassword = await bcrypt.hash(password, saltRounds);
-    console.log(hashPassword);
-
     const result = await userServices.createUser(
       fullName,
       email,
@@ -125,7 +122,6 @@ const getUserById = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const { fullName, profilePicture, about } = req.body;
-    console.log(fullName, profilePicture, about);
     const result = await userServices.updateUser(
       req.params.id,
       fullName,

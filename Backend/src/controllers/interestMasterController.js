@@ -3,7 +3,6 @@ const interestMasterService = require("../services/interestMasterService");
 const createInterest = async (req, res) => {
   try {
     const { interest } = req.body;
-    console.log(interest);
     const result = await interestMasterService.createInterest(interest);
 
     res.status(200).json({
@@ -48,7 +47,6 @@ const getInterest = async (req, res) => {
 const getInterestById = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
     const result = await interestMasterService.getInterestById(id);
 
     if (result.length > 0) {
@@ -75,8 +73,6 @@ const getInterestById = async (req, res) => {
 //Updates an interest.
 const updateInterest = async (req, res) => {
   try {
-    console.log("update");
-
     const result = await interestMasterService.updateInterest(
       req.params.id,
       req.body.interest,

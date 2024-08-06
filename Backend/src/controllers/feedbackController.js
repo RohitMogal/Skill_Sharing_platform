@@ -64,7 +64,6 @@ const getFeedback = async (req, res) => {
 //Retrieves feedback by session ID.
 const getFeedbackBySession = async (req, res) => {
   try {
-    console.log(req.params);
     // process.exit();
     const result = await FeedbackServices.getFeedbackBySession(req.params.id);
 

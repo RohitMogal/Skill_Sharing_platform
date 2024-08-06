@@ -5,12 +5,8 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     const result = await authService.loginUser(email, password);
-    console.log(result);
     if (result.success == true) {
       const token = result.token;
-
-      console.log("inside return");
-      console.log(result);
 
       res.status(200).json(result);
     } else {
@@ -28,7 +24,6 @@ const verifyToken = (req, res, next) => {
   try {
     let token = req.headers["authorization"];
     token = token.slice(7);
-    console.log(token);
     if (!token) {
       return res
         .status(403)
@@ -36,7 +31,6 @@ const verifyToken = (req, res, next) => {
     }
 
     const result = authService.verifyToken(token, req.headers.id);
-    console.log(result);
     // process.exit();
     if (result.success) {
       // res.status(500).json({ success: true, message: result.message });
@@ -53,8 +47,6 @@ const resetPassword = async (req, res) => {
   try {
     const { email, changedPassword } = req.body;
     const result = await authService.resetPassword(email, changedPassword);
-    console.log(result);
-
     if (result) {
       res.status(200).json({
         success: true,
