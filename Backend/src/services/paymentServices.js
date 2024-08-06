@@ -9,8 +9,6 @@ const createPayment = async (UserId, SessionId, Amount) => {
     const currentDate = moment().format("YYYYMMDD");
     const uniqueId = Math.random().toString(36).substring(2, 8);
     const OrderId = `${currentDate}-${uniqueId}`;
-    console.log(OrderId);
-
     const query = `
       INSERT INTO payment (UserId, SessionId, Amount, OrderId, CreatedAt, IsSuccess) 
       VALUES (?, ?, ?, ?, NOW(), ?)
@@ -48,8 +46,6 @@ const createPayment = async (UserId, SessionId, Amount) => {
 
       const { fullname, email, sessiontime, link, sessioncreator, title } =
         mailQueryResult[0];
-      console.log(mailQueryResult);
-
       await sendemail.interestedEmail(
         fullname,
         email,

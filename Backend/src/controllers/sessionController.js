@@ -3,7 +3,6 @@ const SessionServices = require("../services/SessionServices");
 const createsession = async (req, res) => {
   try {
     const UserId = req.headers.id;
-    console.log(UserId);
     const { Description, Title, Link, Img, Interests, SessionTime, Amount } =
       req.body;
 
@@ -189,7 +188,6 @@ const deleteSession = async (req, res) => {
 const myActivity = async (req, res) => {
   try {
     const { id } = req.headers;
-    console.log(id);
     const result = await SessionServices.myActivity(id);
 
     if (result) {

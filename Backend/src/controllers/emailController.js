@@ -3,7 +3,6 @@ const calendarService = require("../services/email.service");
 //Send an interested email
 const interestedEmail = async (req, res) => {
   try {
-    console.log("Controller: Processing email request");
     const { fullName, email, sessionTime, link, sessionCreator, title } =
       req.body;
     // Call the service function to send email
