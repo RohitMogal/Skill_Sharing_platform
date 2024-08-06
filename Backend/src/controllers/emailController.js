@@ -34,32 +34,6 @@ const interestedEmail = async (req, res) => {
     });
   }
 };
-//Send a reminder email
-const remidnderEmail = async (req, res) => {
-  try {
-    console.log("Controller: Processing email request");
-
-    const result = await emailServices.remidnderEmail();
-
-    if (result) {
-      res.status(200).json({
-        success: true,
-        message: "reminder sent successfully",
-      });
-    } else {
-      res.status(400).json({
-        success: false,
-        message: "reminder sending failed. Please try again later.",
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      data: null,
-      message: "Internal Server Error",
-    });
-  }
-};
 
 // const googleAuth = (req, res) => {
 //   const url = calendarService.generateAuthUrl();
