@@ -34,36 +34,6 @@ const interestedEmail = async (req, res) => {
   }
 };
 
-// const googleAuth = (req, res) => {
-//   const url = calendarService.generateAuthUrl();
-//   res.send({ url });
-// };
-
-// const googleRedirect = async (req, res) => {
-//   try {
-//     const code = req.query.code;
-//     await calendarService.getToken(code);
-//     res.send("Authentication successful! You can now create events.");
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Error during authentication.");
-//   }
-// };
-
-// const createEvent = async (req, res) => {
-//   try {
-//     await calendarService.createEvent(req.body);
-//     res.send({ message: "Event created successfully!" });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Error creating event.");
-//   }
-// };
-
 module.exports = {
-  // googleAuth,
-  // googleRedirect,
-  // createEvent,
   interestedEmail,
-  remidnderEmail,
 };

@@ -3,9 +3,7 @@ const cron = require("node-cron");
 const app = express();
 const sequelize = require("./src/config/sequelize");
 const cors = require("cors");
-const reminder = require("./src/services/email.service");
-const bodyParser = require("body-parser");
-const cronReminder = require("./src/helper/cron");
+
 // Import your routes
 const userRoutes = require("./src/routes/userRoutes");
 const sessionRoutes = require("./src/routes/sessionRoute");
