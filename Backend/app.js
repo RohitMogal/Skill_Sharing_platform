@@ -70,8 +70,5 @@ app.use("/email", emailRoute);
 app.use("/request", requestRoute);
 app.use("/payment", paymentRoute);
 
-//To run cron to send notification
-cronReminder();
-
 const port = process.env.PORT || 3000;
 app.listen(port, () => {});
